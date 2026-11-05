@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import Hotel from '../models/Hotel.js';
 import RoomType from '../models/RoomType.js';
 import Room from '../models/Room.js';
@@ -10,6 +9,8 @@ import ApiError from '../utils/ApiError.js';
 import escapeRegex from '../utils/escapeRegex.js';
 import { audit } from '../utils/audit.js';
 import { queueEmail } from '../utils/email.js';
+import { hotelAccess, paged, transact } from '../services/hotelOperations.js';
+import HousekeepingTask from '../models/HousekeepingTask.js';
 
 const activeStatuses = ['pending', 'confirmed', 'checked_in'];
 const outstanding = () => ({ $or: [{ status: 'checked_in' }, { status: { $in: ['pending', 'confirmed'] }, checkOut: { $gt: today() } }] });
@@ -24,26 +25,7 @@ export function dateRange(checkIn, checkOut) {
   return nights;
 }
 
-async function hotelAccess(req, id, session, active = true, lock = false) {
-  if (!['admin', 'user'].includes(req.user.role) && String(req.user.hotel) !== String(id)) throw new ApiError(404, 'Hotel not found');
-  const filter = { _id: id, ...(active ? { isActive: true } : {}) };
-  // All inventory/booking writers contend on the same hotel document. Transactions
-  // retry with a fresh snapshot, preventing write-skew across separate reservations.
-  const hotel = lock
-    ? await Hotel.findOneAndUpdate(filter, { $inc: { operationVersion: 1 } }, { new: true, session })
-    : await Hotel.findOne(filter).session(session || null);
-  if (!hotel) throw new ApiError(404, 'Hotel not found or inactive');
-  return hotel;
-}
-async function paged(Model, filter, req, res, key, populate) {
-  const { page, limit } = req.query;
-  let query = Model.find(filter).sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit);
-  if (populate) query = query.populate(populate);
-  const [records, total] = await Promise.all([query, Model.countDocuments(filter)]);
-  res.json({ success: true, [key]: records, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
-}
 const search = (value, fields) => value ? { $or: fields.map((field) => ({ [field]: { $regex: escapeRegex(value), $options: 'i' } })) } : {};
-const transact = (work) => mongoose.connection.transaction(work);
 
 export async function catalog(req, res) {
   const filter = { ...search(req.query.search, ['name', 'city', 'code']) };
@@ -108,6 +90,7 @@ export async function changeRoomStatus(req, res) {
     room = await Room.findById(req.params.id).session(session);
     if (!room) throw new ApiError(404, 'Room not found');
     await hotelAccess(req, room.hotel, session, true, true);
+    if (room.maintenanceBlocked || await HousekeepingTask.exists({ room: room._id, open: true }).session(session)) throw new ApiError(409, 'Complete the active maintenance or housekeeping work before changing room status manually');
     const from = room.status;
     const to = req.body.status;
     if (from === to || from === 'occupied') throw new ApiError(409, 'Invalid status transition; occupied rooms require check-out');
@@ -144,7 +127,7 @@ export async function saveGuest(req, res) {
   });
   res.status(req.params.id ? 200 : 201).json({ success: true, guest });
 }
-const overlap = (checkIn, checkOut) => ({ status: { $in: activeStatuses }, checkIn: { $lt: checkOut }, checkOut: { $gt: checkIn } });
+const overlap = (checkIn, checkOut) => ({ $or: [{ status: { $in: activeStatuses }, checkIn: { $lt: checkOut }, checkOut: { $gt: checkIn } }, { status: 'checked_in', checkOut: { $lte: today() } }] });
 async function accessibleBooking(req, id, session) {
   const booking = await Reservation.findOne({ _id: id, ...(guestUser(req) ? { owner: req.user._id } : {}) }).session(session || null);
   if (!booking) throw new ApiError(404, 'Reservation not found');
@@ -161,11 +144,11 @@ export async function availability(req, res) {
   }
   const booked = await Reservation.distinct('room', { hotel, ...overlap(checkIn, checkOut), ...(excludeReservation ? { _id: { $ne: excludeReservation } } : {}) });
   const types = await RoomType.find({ hotel, isActive: true, capacity: { $gte: occupants }, ...(roomType ? { _id: roomType } : {}) }).select('_id');
-  await paged(Room, { hotel, isActive: true, status: checkIn === today() ? 'available' : { $ne: 'maintenance' }, roomType: { $in: types.map((type) => type._id) }, _id: { $nin: booked } }, req, res, 'rooms', 'roomType');
+  await paged(Room, { hotel, isActive: true, maintenanceBlocked: { $ne: true }, status: checkIn === today() ? 'available' : { $ne: 'maintenance' }, roomType: { $in: types.map((type) => type._id) }, _id: { $nin: booked } }, req, res, 'rooms', 'roomType');
 }
 async function selectRoom(req, data, booking, session) {
   const nights = dateRange(data.checkIn, data.checkOut);
-  const room = await Room.findOne({ _id: data.room, hotel: booking.hotel, isActive: true, status: data.checkIn === today() ? 'available' : { $ne: 'maintenance' } }).session(session);
+  const room = await Room.findOne({ _id: data.room, hotel: booking.hotel, isActive: true, maintenanceBlocked: { $ne: true }, status: data.checkIn === today() ? 'available' : { $ne: 'maintenance' } }).session(session);
   if (!room) throw new ApiError(409, 'Room is inactive, blocked, or not ready for this arrival');
   const type = await RoomType.findOne({ _id: room.roomType, hotel: booking.hotel, isActive: true, capacity: { $gte: data.occupants } }).session(session);
   if (!type) throw new ApiError(409, 'Room type is inactive or capacity is insufficient');

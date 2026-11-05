@@ -298,7 +298,11 @@ export default function Inventory({ hotel, types = false, role }) {
                               ? row.capacity
                               : `${row.roomType?.name || 'Unknown'} / ${row.floor || '—'}`}
                           </td>
-                          <td>{types ? money(row.rate, row.currency) : row.status}</td>
+                          <td>
+                            {types
+                              ? money(row.rate, row.currency)
+                              : `${row.status}${row.maintenanceBlocked ? ' · maintenance block' : ''}`}
+                          </td>
                           <td>{row.isActive ? 'Active' : 'Inactive'}</td>
                           <td>
                             <div className="hms-actions">
@@ -310,22 +314,25 @@ export default function Inventory({ hotel, types = false, role }) {
                                   Edit
                                 </button>
                               )}
-                              {!types && canStatus && allowed.length > 0 && (
-                                <button
-                                  className="button secondary small"
-                                  onClick={() =>
-                                    setStatusForm({
-                                      id: row._id,
-                                      number: row.number,
-                                      status: allowed[0],
-                                      options: allowed,
-                                      reason: '',
-                                    })
-                                  }
-                                >
-                                  Change status
-                                </button>
-                              )}
+                              {!types &&
+                                canStatus &&
+                                !row.maintenanceBlocked &&
+                                allowed.length > 0 && (
+                                  <button
+                                    className="button secondary small"
+                                    onClick={() =>
+                                      setStatusForm({
+                                        id: row._id,
+                                        number: row.number,
+                                        status: allowed[0],
+                                        options: allowed,
+                                        reason: '',
+                                      })
+                                    }
+                                  >
+                                    Change status
+                                  </button>
+                                )}
                               {!types && (
                                 <button
                                   className="button secondary small"

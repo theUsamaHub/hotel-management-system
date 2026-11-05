@@ -6,6 +6,7 @@ const schema = new mongoose.Schema({
   floor: { type: String, default: '', maxlength: 30 },
   status: { type: String, enum: ['available', 'occupied', 'cleaning', 'maintenance'], default: 'available' },
   isActive: { type: Boolean, default: true },
+  maintenanceBlocked: { type: Boolean, default: false },
 }, { timestamps: true });
 schema.index({ hotel: 1, number: 1 }, { unique: true });
 schema.index({ hotel: 1, roomType: 1, isActive: 1 });

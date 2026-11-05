@@ -108,7 +108,8 @@ export function History({ path, close }) {
                 <strong>
                   {event.action
                     ? event.action
-                        .replace('reservation.', 'Reservation ')
+                        .replaceAll('.', ' ')
+                        .replaceAll('_', ' ')
                         .replace('update', 'updated')
                     : `${event.from || 'New'} → ${event.to}`}
                 </strong>
@@ -118,6 +119,15 @@ export function History({ path, close }) {
                 </p>
                 {(event.reason || event.details?.reason) && (
                   <p>{event.reason || event.details.reason}</p>
+                )}
+                {event.details?.label && <p>Key: {event.details.label}</p>}
+                {event.details?.keys && <p>Issued keys: {event.details.keys.join(', ')}</p>}
+                {event.details?.settlement && (
+                  <p>
+                    Room settlement:{' '}
+                    {money(event.details.settlement.amount, event.details.settlement.currency)} ·{' '}
+                    {event.details.settlement.reference}
+                  </p>
                 )}
                 {event.details?.before && (
                   <p>

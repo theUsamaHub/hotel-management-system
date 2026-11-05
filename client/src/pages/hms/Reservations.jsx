@@ -3,12 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../../api/axios.js';
 import Pagination from '../../components/Pagination.jsx';
 import { get, money, dateAfter, useSave, Field, History, QueryContent } from './shared.jsx';
+import { CheckInForm } from './Stays.jsx';
 
 export default function Reservations({ hotel, isGuest, edit }) {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({ search: '', status: '', from: '', to: '' });
   const [cancel, setCancel] = useState(null);
   const [history, setHistory] = useState(null);
+  const [arrival, setArrival] = useState(null);
   const query = useQuery({
     queryKey: ['hms', 'reservations', hotel, page, filters],
     queryFn: () =>
@@ -107,6 +109,9 @@ export default function Reservations({ hotel, isGuest, edit }) {
           </form>
         </section>
       )}
+      {arrival && (
+        <CheckInForm key={arrival._id} booking={arrival} close={() => setArrival(null)} />
+      )}
       {history && (
         <History
           key={history}
@@ -180,6 +185,14 @@ export default function Reservations({ hotel, isGuest, edit }) {
                                   Cancel booking
                                 </button>
                               )}
+                              {!isGuest &&
+                                row.status === 'confirmed' &&
+                                row.checkIn <= dateAfter(0) &&
+                                row.checkOut > dateAfter(0) && (
+                                  <button className="button small" onClick={() => setArrival(row)}>
+                                    Check in
+                                  </button>
+                                )}
                               <button
                                 className="button secondary small"
                                 onClick={() => setHistory(row._id)}

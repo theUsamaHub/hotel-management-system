@@ -6,6 +6,8 @@ import Inventory from './Inventory.jsx';
 import Guests from './Guests.jsx';
 import SearchRooms from './SearchRooms.jsx';
 import Reservations from './Reservations.jsx';
+import Stays from './Stays.jsx';
+import WorkOrders from './WorkOrders.jsx';
 
 function HotelWorkspace({ hotel, role }) {
   const isGuest = role === 'user';
@@ -21,8 +23,13 @@ function HotelWorkspace({ hotel, role }) {
           ['guests', isGuest ? 'My guest profile' : 'Guests'],
           ['search', 'Find rooms'],
           ['reservations', isGuest ? 'My reservations' : 'Reservations'],
+          ['stays', isGuest ? 'My stays' : 'Guest stays'],
         ]
       : []),
+    ...(['admin', 'manager', 'receptionist', 'housekeeping'].includes(role)
+      ? [['housekeeping', 'Housekeeping']]
+      : []),
+    ['maintenance', isGuest ? 'Report a problem' : 'Maintenance'],
   ];
   function navigate(value) {
     setEditing(null);
@@ -43,6 +50,9 @@ function HotelWorkspace({ hotel, role }) {
         ))}
       </nav>
       {tab === 'rooms' && <Inventory hotel={hotel} role={role} />}
+      {tab === 'stays' && <Stays hotel={hotel} isGuest={isGuest} />}
+      {tab === 'housekeeping' && <WorkOrders key="housekeeping" hotel={hotel} />}
+      {tab === 'maintenance' && <WorkOrders key="maintenance" hotel={hotel} maintenance />}
       {tab === 'types' && <Inventory key="types" hotel={hotel} role={role} types />}
       {tab === 'guests' && <Guests hotel={hotel} isGuest={isGuest} />}
       {tab === 'search' && (
@@ -81,7 +91,7 @@ export default function HmsOperations() {
         <div>
           <p className="eyebrow">LuxuryStay Hospitality</p>
           <h1>{user.role === 'user' ? 'Plan your stay' : 'Hotel operations'}</h1>
-          <p>Rooms, guest profiles and reservations.</p>
+          <p>Reservations, guest stays and daily hotel operations.</p>
         </div>
       </div>
       <QueryContent query={hotels}>
