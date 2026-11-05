@@ -1,3 +1,4 @@
+import { notifyHotel } from './notifications.js';
 import mongoose from 'mongoose';
 import Hotel from '../models/Hotel.js';
 import RoomStatusLog from '../models/RoomStatusLog.js';
@@ -43,11 +44,13 @@ export async function ensureCleaning(req, room, reason, session) {
     [task] = await HousekeepingTask.create([{ hotel: room.hotel, room: room._id, required: true, scheduledFor: new Date(), notes: reason, createdBy: req.user._id }], { session });
   }
   await audit(req, 'housekeeping.required', task._id, { reason, room: String(room._id) }, session);
+  await notifyHotel(room.hotel, 'housekeeping', task._id, `Room ${room.number} requires cleaning`, session);
   return task;
 }
 export async function syncMaintenance(req, room, reason, session) {
   const blocked = !!await MaintenanceRequest.exists({ room: room._id, blocksRoom: true, status: { $ne: 'resolved' } }).session(session);
   const wasBlocked = room.maintenanceBlocked;
+  if (wasBlocked !== blocked) await notifyHotel(room.hotel, 'maintenance', room._id, `Room ${room.number}: booking block ${blocked ? 'applied' : 'cleared'}`, session);
   room.maintenanceBlocked = blocked;
   if (blocked && room.status !== 'occupied') await roomState(req, room, 'maintenance', reason, session);
   else if (wasBlocked && !blocked && room.status !== 'occupied') {

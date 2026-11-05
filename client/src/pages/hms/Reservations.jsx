@@ -154,7 +154,15 @@ export default function Reservations({ hotel, isGuest, edit }) {
                             <br />
                             {row.checkIn} → {row.checkOut}
                           </td>
-                          <td>{money(row.quote.total, row.quote.currency)}</td>
+                          <td>
+                            {money(row.quote.total, row.quote.currency)}
+                            <br />
+                            <small>
+                              Tax: {(row.policy?.taxBps || 0) / 100}% - Cancel{' '}
+                              {row.policy?.cancellationDays || 0} days before arrival - Check-in{' '}
+                              {row.policy?.checkInHour || 0}:00 UTC
+                            </small>
+                          </td>
                           <td>{row.status.replaceAll('_', ' ')}</td>
                           <td>
                             <div className="hms-actions">

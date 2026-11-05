@@ -7,5 +7,6 @@ const schema = new mongoose.Schema({
   reference: { type: String, required: true, trim: true, uppercase: true, maxlength: 120 },
   recordedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, { timestamps: true });
+schema.index({ hotel: 1, createdAt: 1 });
 schema.index({ hotel: 1, reference: 1 }, { unique: true });
 export default mongoose.model('Payment', schema);

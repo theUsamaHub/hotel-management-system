@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { policyFields } from './HotelPolicy.js';
 import { randomUUID } from 'node:crypto';
 const schema = new mongoose.Schema({
   reference: { type: String, default: () => `LS-${randomUUID()}`, unique: true },
@@ -18,9 +19,11 @@ const schema = new mongoose.Schema({
     roomNumber: String, roomType: String, rate: Number, currency: String,
     nights: Number, total: Number,
   },
+  policy: { type: new mongoose.Schema(policyFields, { _id: false }), default: undefined },
   contact: { name: String, email: String, phone: String },
 }, { timestamps: true });
 schema.index({ room: 1, status: 1, checkIn: 1, checkOut: 1 });
 schema.index({ hotel: 1, createdAt: -1 });
+schema.index({ hotel: 1, checkIn: 1, status: 1 });
 schema.index({ owner: 1, createdAt: -1 });
 export default mongoose.model('Reservation', schema);

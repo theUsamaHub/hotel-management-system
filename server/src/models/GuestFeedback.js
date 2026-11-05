@@ -6,5 +6,6 @@ const schema = new mongoose.Schema({
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String, required: true, maxlength: 2000 },
 }, { timestamps: true });
+schema.index({ hotel: 1, createdAt: 1 });
 schema.index({ hotel: 1, rating: 1, createdAt: -1 });
 export default mongoose.model('GuestFeedback', schema);

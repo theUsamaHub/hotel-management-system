@@ -1,3 +1,6 @@
+import { policyFor, arrivalRate } from '../services/policies.js';
+import { policyDefaults } from '../models/HotelPolicy.js';
+import { notifyHotel } from '../services/notifications.js';
 import Hotel from '../models/Hotel.js';
 import RoomType from '../models/RoomType.js';
 import Room from '../models/Room.js';
@@ -17,10 +20,10 @@ const outstanding = () => ({ $or: [{ status: 'checked_in' }, { status: { $in: ['
 const today = () => new Date().toISOString().slice(0, 10);
 const guestUser = (req) => req.user.role === 'user';
 const day = 86400000;
-export function dateRange(checkIn, checkOut) {
+export function dateRange(checkIn, checkOut, policy = policyDefaults) {
   const nights = (Date.parse(checkOut) - Date.parse(checkIn)) / day;
-  if (checkIn < today() || nights < 1 || nights > 365 || Date.parse(checkIn) - Date.parse(today()) > 730 * day) {
-    throw new ApiError(400, 'Choose a future or same-day arrival within two years and a stay of 1–365 nights');
+  if (checkIn < today() || nights < 1 || nights > policy.maxStayNights || (!policy.allowSameDay && checkIn === today()) || Date.parse(checkIn) - Date.parse(today()) > policy.maxAdvanceDays * day) {
+    throw new ApiError(400, 'Dates do not meet the hotel arrival window or maximum stay policy');
   }
   return nights;
 }
@@ -136,28 +139,34 @@ async function accessibleBooking(req, id, session) {
 }
 export async function availability(req, res) {
   const { hotel, checkIn, checkOut, occupants, roomType, excludeReservation } = req.query;
-  dateRange(checkIn, checkOut);
   await hotelAccess(req, hotel);
+  let policy = await policyFor(hotel);
   if (excludeReservation) {
     const excluded = await accessibleBooking(req, excludeReservation);
     if (String(excluded.hotel) !== hotel || !['pending', 'confirmed'].includes(excluded.status)) throw new ApiError(400, 'Invalid reservation to modify');
+    policy = excluded.policy || policyDefaults;
   }
+  dateRange(checkIn, checkOut, policy);
   const booked = await Reservation.distinct('room', { hotel, ...overlap(checkIn, checkOut), ...(excludeReservation ? { _id: { $ne: excludeReservation } } : {}) });
   const types = await RoomType.find({ hotel, isActive: true, capacity: { $gte: occupants }, ...(roomType ? { _id: roomType } : {}) }).select('_id');
-  await paged(Room, { hotel, isActive: true, maintenanceBlocked: { $ne: true }, status: checkIn === today() ? 'available' : { $ne: 'maintenance' }, roomType: { $in: types.map((type) => type._id) }, _id: { $nin: booked } }, req, res, 'rooms', 'roomType');
+  const filter = { hotel, isActive: true, maintenanceBlocked: { $ne: true }, status: checkIn === today() ? 'available' : { $ne: 'maintenance' }, roomType: { $in: types.map((type) => type._id) }, _id: { $nin: booked } };
+  const { page, limit } = req.query;
+  const [rooms, total] = await Promise.all([Room.find(filter).populate('roomType').sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit).lean(), Room.countDocuments(filter)]);
+  res.json({ success: true, policy, rooms: rooms.map((room) => ({ ...room, quoteRate: arrivalRate(room.roomType.rate, checkIn, policy) })), pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
 }
-async function selectRoom(req, data, booking, session) {
-  const nights = dateRange(data.checkIn, data.checkOut);
+async function selectRoom(req, data, booking, session, confirming = false) {
+  const nights = dateRange(data.checkIn, data.checkOut, confirming ? policyDefaults : booking.policy || policyDefaults);
   const room = await Room.findOne({ _id: data.room, hotel: booking.hotel, isActive: true, maintenanceBlocked: { $ne: true }, status: data.checkIn === today() ? 'available' : { $ne: 'maintenance' } }).session(session);
   if (!room) throw new ApiError(409, 'Room is inactive, blocked, or not ready for this arrival');
   const type = await RoomType.findOne({ _id: room.roomType, hotel: booking.hotel, isActive: true, capacity: { $gte: data.occupants } }).session(session);
   if (!type) throw new ApiError(409, 'Room type is inactive or capacity is insufficient');
   if (await Reservation.exists({ room: room._id, ...overlap(data.checkIn, data.checkOut), ...(booking._id ? { _id: { $ne: booking._id } } : {}) }).session(session)) throw new ApiError(409, 'Room is already reserved for these dates');
   const unchangedRoom = String(booking.room) === String(room._id) && booking.quote;
-  const rate = unchangedRoom ? booking.quote.rate : type.rate;
+  const rate = unchangedRoom ? booking.quote.rate : arrivalRate(type.rate, data.checkIn, booking.policy || policyDefaults);
   return { roomNumber: room.number, roomType: unchangedRoom ? booking.quote.roomType : type.name, rate, currency: unchangedRoom ? booking.quote.currency : type.currency, nights, total: rate * nights };
 }
 async function notification(booking, event, session) {
+  await notifyHotel(booking.hotel, 'reservations', booking._id, `Reservation ${booking.reference}: ${event}`, session, booking.owner);
   await queueEmail(booking.contact.email, `LuxuryStay reservation ${event}`, `${booking.contact.name},\nReservation: ${booking.reference}\nStatus: ${booking.status}\nArrival: ${booking.checkIn}\nDeparture: ${booking.checkOut}\nRoom: ${booking.quote.roomNumber}\nRoom subtotal: ${(booking.quote.total / 100).toFixed(2)} ${booking.quote.currency}\nTaxes and additional services are not included.`, undefined, session);
 }
 export async function createBooking(req, res) {
@@ -166,8 +175,9 @@ export async function createBooking(req, res) {
     await hotelAccess(req, req.body.hotel, session, true, true);
     const guest = await GuestProfile.findOne({ _id: req.body.guest, hotel: req.body.hotel, ...(guestUser(req) ? { user: req.user._id } : {}) }).session(session);
     if (!guest) throw new ApiError(404, 'Guest profile not found');
-    const quote = await selectRoom(req, req.body, { hotel: req.body.hotel }, session);
-    [booking] = await Reservation.create([{ ...req.body, quote, owner: guest.user, createdBy: req.user._id, contact: { name: guest.name, email: guest.email, phone: guest.phone } }], { session });
+    const policy = await policyFor(req.body.hotel, session);
+    const quote = await selectRoom(req, req.body, { hotel: req.body.hotel, policy }, session);
+    [booking] = await Reservation.create([{ ...req.body, quote, policy, owner: guest.user, createdBy: req.user._id, contact: { name: guest.name, email: guest.email, phone: guest.phone } }], { session });
     await audit(req, 'reservation.create', booking._id, { hotel: String(booking.hotel), checkIn: booking.checkIn, checkOut: booking.checkOut, quote }, session);
     await notification(booking, 'received', session);
   });
@@ -194,10 +204,11 @@ export async function updateBooking(req, res) {
     await hotelAccess(req, booking.hotel, session, action !== 'cancel', true);
     if (!['pending', 'confirmed'].includes(booking.status) || booking.version !== req.body.version) throw new ApiError(409, 'Reservation changed or cannot be edited; refresh and try again');
     if (action !== 'cancel' || guestUser(req)) dateRange(booking.checkIn, booking.checkOut);
+    if (guestUser(req) && (Date.parse(booking.checkIn) - Date.parse(today())) / day < (booking.policy?.cancellationDays || 0)) throw new ApiError(409, 'Self-service change/cancellation deadline has passed; contact reception');
     const before = { room: String(booking.room), checkIn: booking.checkIn, checkOut: booking.checkOut, status: booking.status, quote: booking.quote.toObject() };
     if (action === 'confirm') {
       if (booking.status !== 'pending') throw new ApiError(409, 'Only pending bookings can be confirmed');
-      await selectRoom(req, booking, booking, session);
+      await selectRoom(req, booking, booking, session, true);
       booking.status = 'confirmed';
     } else if (action === 'cancel') {
       booking.status = 'cancelled'; booking.cancellationReason = req.body.reason;

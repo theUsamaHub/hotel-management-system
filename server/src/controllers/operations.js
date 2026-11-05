@@ -1,3 +1,4 @@
+import { notifyHotel } from '../services/notifications.js';
 import Stay from '../models/Stay.js';
 import StayKey from '../models/StayKey.js';
 import Reservation from '../models/Reservation.js';
@@ -59,6 +60,7 @@ export async function checkIn(req, res) {
     const room = await roomFor(req, booking.room, booking.hotel, session);
     checkVersion(booking, req.body.version);
     if (booking.status !== 'confirmed' || booking.checkIn > today() || booking.checkOut <= today()) throw new ApiError(409, 'Check-in requires a confirmed booking within its stay dates');
+    if (booking.checkIn === today() && new Date().getUTCHours() < (booking.policy?.checkInHour || 0)) throw new ApiError(409, 'The saved check-in time has not arrived');
     if (!room.isActive || room.status !== 'available' || room.maintenanceBlocked) throw new ApiError(409, 'Room must be active, clean, unoccupied and free of maintenance blocks');
     if (await HousekeepingTask.exists({ room: room._id, open: true, required: true }).session(session)) throw new ApiError(409, 'Required cleaning is not complete');
     if (!await RoomType.exists({ _id: room.roomType, isActive: true, capacity: { $gte: booking.occupants } }).session(session)) throw new ApiError(409, 'Room type is inactive or capacity is insufficient');
@@ -165,6 +167,7 @@ export async function createHousekeeping(req, res) {
     const room = await roomFor(req, req.body.room, req.body.hotel, session);
     await assigned(req.body.assignedTo, 'housekeeping', room.hotel, session);
     [task] = await HousekeepingTask.create([{ ...req.body, createdBy: req.user._id, required: room.status === 'cleaning' || room.status === 'maintenance' }], { session });
+    await notifyHotel(task.hotel, 'housekeeping', task._id, `Cleaning task created for room ${room.number}`, session);
     await audit(req, 'housekeeping.create', task._id, { assignedTo: req.body.assignedTo, scheduledFor: req.body.scheduledFor, reason: req.body.notes }, session);
   });
   res.status(201).json({ success: true, task });
@@ -178,6 +181,7 @@ export async function editHousekeeping(req, res) {
     await assigned(req.body.assignedTo, 'housekeeping', task.hotel, session);
     task.set({ assignedTo: req.body.assignedTo, scheduledFor: req.body.scheduledFor, notes: req.body.notes, version: task.version + 1 });
     await task.save({ session });
+    await notifyHotel(task.hotel, 'housekeeping', task._id, 'Cleaning task assignment or schedule updated', session);
     await audit(req, 'housekeeping.assign', task._id, { assignedTo: req.body.assignedTo, scheduledFor: req.body.scheduledFor, reason: req.body.notes }, session);
   });
   res.json({ success: true, task });
@@ -223,6 +227,7 @@ export async function createMaintenance(req, res) {
     await assigned(req.body.assignedTo, 'maintenance', room.hotel, session);
     [request] = await MaintenanceRequest.create([{ ...req.body, reportedBy: req.user._id }], { session });
     await syncMaintenance(req, room, req.body.title, session);
+    await notifyHotel(request.hotel, 'maintenance', request._id, `Maintenance reported for room ${room.number}`, session);
     await audit(req, 'maintenance.create', request._id, { reason: req.body.description, blocksRoom: request.blocksRoom, priority: request.priority }, session);
   });
   res.status(201).json({ success: true, request });
@@ -239,6 +244,7 @@ export async function editMaintenance(req, res) {
     request.set({ assignedTo: req.body.assignedTo, priority: req.body.priority, blocksRoom: req.body.blocksRoom, version: request.version + 1 });
     await request.save({ session });
     await syncMaintenance(req, await Room.findById(request.room).session(session), request.title, session);
+    await notifyHotel(request.hotel, 'maintenance', request._id, 'Maintenance assignment or priority updated', session);
     await audit(req, 'maintenance.assign', request._id, { assignedTo: req.body.assignedTo, priority: request.priority, blocksRoom: request.blocksRoom }, session);
   });
   res.json({ success: true, request });

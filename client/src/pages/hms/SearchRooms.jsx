@@ -46,8 +46,8 @@ export default function SearchRooms({ hotel, editing, done, profiles }) {
       <h2>{editing ? 'Modify reservation / reassign room' : 'Find and reserve a room'}</h2>
       <p className="muted">
         Arrival is inclusive; departure is exclusive. Dates use UTC. Pending bookings hold the room
-        until staff confirms or cancels them. Guest changes and cancellations are allowed through
-        the arrival date, before check-in.
+        until staff confirms or cancels them. Guest changes and cancellations follow the saved hotel
+        policy.
       </p>
       {editing && (
         <p>
@@ -138,6 +138,15 @@ export default function SearchRooms({ hotel, editing, done, profiles }) {
           <QueryContent query={query}>
             {(data) => (
               <>
+                {data.policy && (
+                  <p>
+                    Booking terms: tax {data.policy.taxBps / 100}%; changes/cancellation at least{' '}
+                    {data.policy.cancellationDays} days before arrival; check-in from{' '}
+                    {data.policy.checkInHour}:00 UTC; checkout {data.policy.checkOutHour}:00 UTC.
+                    Saturday/Sunday arrivals use {data.policy.weekendRateBps / 100}% of base rate.
+                    Displayed rates include this adjustment.
+                  </p>
+                )}
                 <div className="table-wrap">
                   <table>
                     <thead>
@@ -152,7 +161,9 @@ export default function SearchRooms({ hotel, editing, done, profiles }) {
                     <tbody>
                       {data.rooms.map((room) => {
                         const same = editing && editing.room === room._id;
-                        const rate = same ? editing.quote.rate : room.roomType.rate;
+                        const rate = same
+                          ? editing.quote.rate
+                          : (room.quoteRate ?? room.roomType.rate);
                         const currency = same ? editing.quote.currency : room.roomType.currency;
                         const nights =
                           (Date.parse(criteria.checkOut) - Date.parse(criteria.checkIn)) / 86400000;

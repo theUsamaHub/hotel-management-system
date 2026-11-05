@@ -12,4 +12,5 @@ const schema = new mongoose.Schema({
   property: { name: String, address: String, city: String, country: String, email: String, phone: String },
   bookingReference: String, issuedAt: Date, lastEmailedAt: Date,
 }, { timestamps: true });
+schema.index({ hotel: 1, status: 1, issuedAt: 1 });
 export default mongoose.model('Invoice', schema);

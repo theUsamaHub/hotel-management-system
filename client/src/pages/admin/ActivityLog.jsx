@@ -6,6 +6,9 @@ import ErrorState from '../../components/ErrorState.jsx';
 import Pagination from '../../components/Pagination.jsx';
 
 const actions = [
+  'policy.update',
+  'policy.reset',
+  'settings.update',
   'user.role',
   'user.active',
   'user.delete',
@@ -28,7 +31,7 @@ export default function ActivityLog() {
         <div>
           <p className="eyebrow">Workspace history</p>
           <h1>Activity log</h1>
-          <p>Review administrative changes to people, categories, and media.</p>
+          <p>Review hotel policies, global settings, account changes and system activity.</p>
         </div>
       </div>
       <section className="card">
@@ -74,7 +77,10 @@ export default function ActivityLog() {
                       <td>{event.target}</td>
                       <td>
                         {Object.entries(event.details || {})
-                          .map(([key, value]) => `${key}: ${String(value)}`)
+                          .map(
+                            ([key, value]) =>
+                              `${key}: ${typeof value === 'object' ? JSON.stringify(value) : String(value)}`,
+                          )
                           .join(', ') || '—'}
                       </td>
                     </tr>

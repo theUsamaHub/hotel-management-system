@@ -6,12 +6,12 @@ import Payment from '../models/Payment.js';
 import BillingCharge from '../models/BillingCharge.js';
 import ServiceRequest from '../models/ServiceRequest.js';
 import ApiError from '../utils/ApiError.js';
-import { hotelAccess, today } from './hotelOperations.js';
+import { hotelAccess } from './hotelOperations.js';
 import { audit } from '../utils/audit.js';
 import { queueEmail } from '../utils/email.js';
 
 export function roomSettlement(booking) {
-  const extraNights = Math.max(0, Math.floor((Date.parse(today()) - Date.parse(booking.checkOut)) / 86400000));
+  const extraNights = Math.max(0, Math.floor((Date.now() - Date.parse(booking.checkOut) - (booking.policy?.checkOutHour || 0) * 3600000) / 86400000));
   return { roomTotal: booking.quote.total + extraNights * booking.quote.rate, extraNights, currency: booking.quote.currency };
 }
 export async function financialStay(req, id, session, active = false) {
@@ -37,7 +37,7 @@ export async function billFor(stay, session) {
   const subtotal = lines.reduce((sum, line) => sum + line.total, 0);
   const discount = invoice?.discount || 0;
   if (!Number.isSafeInteger(subtotal) || discount > subtotal) throw new ApiError(409, 'Charges do not support the configured discount or exceed the account limit');
-  const taxBps = invoice?.taxBps || 0;
+  const taxBps = invoice?.taxBps ?? booking.policy?.taxBps ?? 0;
   const tax = Number((BigInt(subtotal - discount) * BigInt(taxBps) + 5000n) / 10000n);
   const total = subtotal - discount + tax;
   if (!Number.isSafeInteger(total)) throw new ApiError(409, 'Account total exceeds the supported limit');

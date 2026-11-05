@@ -65,15 +65,15 @@ Phase 4 is implemented on `feat/hms-billing-guest-services`: service catalog/req
 - Phase 2: implemented in the core operations branch above.
 - Phase 3: implemented in the stay-operations branch above.
 - Phase 4: implemented in the financial/guest-services branch above.
-- Phase 5: policies, taxes, operational notifications and reporting.
+- Phase 5: implemented on `feat/hms-policies-notifications-reports`: global/hotel policies, saved booking terms, pricing and tax rules, staff/guest notification inboxes, operational/financial reports, baseline demand estimates and process monitoring. See [administration and reporting guide](HMS-ADMINISTRATION-REPORTING.md).
 - Phase 6: full workflow tests, security/performance checks, user documentation and demo.
 
-Phases 5–6 remain outstanding. Keep each subsequent module on a feature branch. Existing category/media demos remain available until replaced by hotel workflows.
+Phase 6 remains outstanding. Forecasts are baseline estimates and monitoring is process-local; production performance/uptime targets are not yet verified. Keep each subsequent module on a feature branch. Existing category/media demos remain available until replaced by hotel workflows.
 
 ## Validation
 
 Run `npm run lint`, `npm test`, and `npm run build`. Server tests use an isolated in-memory MongoDB, not the configured Atlas database. HMS tests cover cross-hotel isolation, forbidden guest access, input validation, inactive hotel assignments, password hashing, session revocation and audit events.
 
-Validated for this increment: lint and production build passed; 75 backend and 34 frontend tests passed (the cross-site suite was rerun after fixing dotenv isolation). Atlas connectivity was verified with a read-only ping. No demo seed or admin bootstrap was run against Atlas. The first admin still needs your chosen credentials through the setup command above.
+Validated for the administration/reporting increment: 129 backend and 57 frontend tests passed; final focused policy/report/activity tests also passed (9 backend, 12 frontend). Lint and production build passed. Tests used isolated MongoDB instances; Atlas startup and health checks passed; no demo seed or admin bootstrap was run against Atlas. Phase 6 browser/load/deployment validation remains pending.
 
 If the MongoDB test download is unavailable, set `MONGOMS_SYSTEM_BINARY` to a local `mongod` executable before running backend tests. Tests still launch a fresh isolated database rather than connecting to an existing MongoDB service.

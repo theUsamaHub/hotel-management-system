@@ -1,3 +1,4 @@
+import { Policies, Notifications, Reports, Monitoring } from './Management.jsx';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAuth from '../../hooks/useAuth.js';
@@ -35,6 +36,15 @@ function HotelWorkspace({ hotel, role }) {
       : []),
     ['maintenance', isGuest ? 'Report a problem' : 'Maintenance'],
     ['services', 'Guest services'],
+    ['policies', 'Hotel policies'],
+    ...(role === 'admin'
+      ? [
+          ['settings', 'Global settings'],
+          ['monitoring', 'Monitoring'],
+        ]
+      : []),
+    ['notifications', 'Notifications'],
+    ...(canManage ? [['reports', 'Reports']] : []),
     ...(canManage || isGuest ? [['feedback', isGuest ? 'My feedback' : 'Guest feedback']] : []),
   ];
   function navigate(value) {
@@ -55,6 +65,18 @@ function HotelWorkspace({ hotel, role }) {
           </button>
         ))}
       </nav>
+      {tab === 'monitoring' && <Monitoring />}
+      {tab === 'settings' && <Policies key="global" hotel={hotel} canManage global />}
+      {tab === 'policies' && <Policies hotel={hotel} canManage={canManage} />}
+      {tab === 'notifications' && (
+        <Notifications
+          hotel={hotel}
+          openModule={(module) => {
+            if (tabs.some(([value]) => value === module)) navigate(module);
+          }}
+        />
+      )}
+      {tab === 'reports' && <Reports hotel={hotel} />}
       {tab === 'rooms' && <Inventory hotel={hotel} role={role} />}
       {tab === 'billing' && <Billing hotel={hotel} />}
       {tab === 'services' && <GuestServices hotel={hotel} />}

@@ -17,4 +17,5 @@ const schema = new mongoose.Schema({
 }, { timestamps: true });
 schema.index({ room: 1 }, { unique: true, partialFilterExpression: { status: 'active' } });
 schema.index({ hotel: 1, status: 1 });
+schema.index({ hotel: 1, checkedInAt: 1, checkedOutAt: 1 });
 export default mongoose.model('Stay', schema);
