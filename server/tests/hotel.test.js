@@ -3,6 +3,7 @@ import { session } from './helpers.js';
 import Hotel from '../src/models/Hotel.js';
 import User from '../src/models/User.js';
 import AuditEvent from '../src/models/AuditEvent.js';
+process.env.HMS_TRANSACTION_TESTS = '1';
 
 const property = { name: 'LuxuryStay Karachi', code: 'KHI-01', address: '1 Main Road', city: 'Karachi', country: 'Pakistan', email: 'karachi@example.com', phone: '+92 21 1234567' };
 const employee = (hotel) => ({ name: 'Reception Team', email: 'reception@example.com', password: 'StaffPassword123!', role: 'receptionist', hotel, phone: '123456', jobTitle: 'Front desk', isActive: true });

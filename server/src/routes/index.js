@@ -6,6 +6,7 @@ import mediaRoutes from './media.js';
 import accountRoutes from './account.js';
 import hotelRoutes from './hotel.js';
 import staffRoutes from './staff.js';
+import hmsRoutes from './hms.js';
 import { protect } from '../middleware/auth.js';
 import { authorize } from '../middleware/role.js';
 import validate from '../middleware/validate.js';
@@ -20,6 +21,7 @@ router.get('/audit', protect, authorize('admin'), validate(auditSchema), asyncHa
 router.use('/users', userRoutes);
 router.use('/hotels', hotelRoutes);
 router.use('/staff', staffRoutes);
+router.use('/hms', hmsRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/media', mediaRoutes);
 router.get('/health', (_req, res) => res.json({ success: true, message: 'API is healthy' }));

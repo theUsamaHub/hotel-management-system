@@ -1,0 +1,28 @@
+import { z } from 'zod';
+import { idParams, paginationQuery } from './user.js';
+const id = idParams.shape.id;
+const text = (max) => z.string().trim().min(1).max(max);
+export const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine((v) => {
+  const parsed = new Date(`${v}T00:00:00Z`);
+  return !Number.isNaN(parsed.valueOf()) && parsed.toISOString().slice(0, 10) === v;
+}, 'Invalid calendar date');
+export const list = z.object({ query: paginationQuery.extend({ hotel: id }).strict() });
+export const catalog = z.object({ query: paginationQuery.strict() });
+export const detail = z.object({ params: idParams });
+const typeFields = z.object({ name: text(80), description: z.string().trim().max(1000).default(''), capacity: z.number().int().min(1).max(20), rate: z.number().int().min(0).max(100000000), currency: z.enum(['PKR', 'USD', 'EUR', 'GBP', 'AED']), isActive: z.boolean().default(true) }).strict();
+export const typeCreate = z.object({ body: typeFields.extend({ hotel: id }) });
+export const typeUpdate = z.object({ params: idParams, body: typeFields });
+const roomFields = z.object({ number: text(20).toUpperCase(), floor: z.string().trim().max(30).default(''), roomType: id, isActive: z.boolean().default(true) }).strict();
+export const roomCreate = z.object({ body: roomFields.extend({ hotel: id }) });
+export const roomUpdate = z.object({ params: idParams, body: roomFields });
+export const roomStatus = z.object({ params: idParams, body: z.object({ status: z.enum(['available', 'cleaning', 'maintenance']), reason: text(300) }).strict() });
+export const history = z.object({ params: idParams, query: paginationQuery.strict() });
+export const availability = z.object({ query: paginationQuery.extend({ hotel: id, checkIn: date, checkOut: date, occupants: z.coerce.number().int().min(1).max(20), roomType: id.optional(), excludeReservation: id.optional() }).strict() });
+const guestFields = z.object({ name: text(80).min(2), email: z.string().trim().toLowerCase().email().max(254), phone: text(30), preferences: z.string().trim().max(1000).default('') }).strict();
+export const guestCreate = z.object({ body: guestFields.extend({ hotel: id }) });
+export const guestUpdate = z.object({ params: idParams, body: guestFields });
+const bookingFields = z.object({ room: id, checkIn: date, checkOut: date, occupants: z.number().int().min(1).max(20), notes: z.string().trim().max(1000).default('') }).strict();
+export const bookingCreate = z.object({ body: bookingFields.extend({ hotel: id, guest: id }) });
+export const bookingUpdate = z.object({ params: idParams, body: bookingFields.extend({ version: z.number().int().min(0) }) });
+export const bookingAction = z.object({ params: idParams, body: z.object({ version: z.number().int().min(0), reason: z.string().trim().max(300).default('') }).strict() });
+export const bookingList = z.object({ query: paginationQuery.extend({ hotel: id, status: z.enum(['pending', 'confirmed', 'checked_in', 'checked_out', 'cancelled']).optional(), from: date.optional(), to: date.optional() }).strict() });

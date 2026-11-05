@@ -1,6 +1,6 @@
 # LuxuryStay HMS module tracker
 
-## Current increment: foundation
+## Foundation — merged into main
 
 Implemented on `feat/hms-foundation`:
 
@@ -43,15 +43,28 @@ Hotel fields: `name`, `code`, `address`, `city`, `country`, `email`, `phone`, `i
 Staff creation: `name`, `email`, `password`, `role`, `hotel`, `phone`, `jobTitle`, `isActive`.
 Staff update: same editable fields excluding `email` and `password`, which retain the existing verified email/password account workflows.
 
+## Core operations — feat/hms-rooms-reservations
+
+- [x] Room types, capacities, prices and currencies.
+- [x] Room creation/editing, activation, physical status and history.
+- [x] Guest contact profiles and preferences, including guest self-service.
+- [x] Date-based availability with capacity and readiness checks.
+- [x] Guest and reception bookings, confirmation, modification, room reassignment and cancellation.
+- [x] Transactional double-booking prevention, including concurrent requests.
+- [x] Historical booking prices, mutation audit history and durable notification emails.
+- [x] Basic staff/guest screens at `/admin/operations` and `/user/operations`.
+
+See [setup, policies, permissions, API and verification](HMS-ROOMS-RESERVATIONS.md).
+
 ## Next module branches
 
-- Phase 2: room types, room inventory/status, guest profiles and reservations with concurrency-safe overlap prevention.
+- Phase 2: implemented in the core operations branch above.
 - Phase 3: check-in/out, key records, housekeeping and maintenance.
 - Phase 4: guest services, charges, invoices, payments and feedback.
 - Phase 5: policies, taxes, operational notifications and reporting.
 - Phase 6: full workflow tests, security/performance checks, user documentation and demo.
 
-These later phases are not implemented by this foundation increment. Keep each subsequent module on a feature branch. Existing category/media demos remain available until replaced by hotel workflows.
+Phases 3–6 remain outstanding. Keep each subsequent module on a feature branch. Existing category/media demos remain available until replaced by hotel workflows.
 
 ## Validation
 
