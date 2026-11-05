@@ -1,6 +1,9 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+// dotenv must not refill deleted test variables from a developer's real .env.
+process.env.DOTENV_CONFIG_PATH = process.platform === 'win32' ? 'NUL' : '/dev/null';
+
 // Reuse an installed binary on Windows while still starting an isolated server.
 const installations = join(process.env.ProgramFiles || 'C:/Program Files', 'MongoDB', 'Server');
 if (!process.env.MONGOMS_SYSTEM_BINARY && process.platform === 'win32' && existsSync(installations)) {

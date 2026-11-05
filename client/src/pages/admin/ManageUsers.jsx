@@ -87,6 +87,7 @@ export default function ManageUsers() {
                         >
                           <option value="user">User</option>
                           <option value="admin">Admin</option>
+                          {!['admin', 'user'].includes(member.role) && <option value={member.role}>{member.role}</option>}
                         </select>
                       </td>
                       <td>

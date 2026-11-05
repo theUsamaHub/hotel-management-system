@@ -22,6 +22,7 @@ const ManageMedia = lazy(() => import('../pages/admin/ManageMedia.jsx'));
 const BrowseMedia = lazy(() => import('../pages/user/BrowseMedia.jsx'));
 const AccountLink = lazy(() => import('../pages/public/AccountLink.jsx'));
 const ActivityLog = lazy(() => import('../pages/admin/ActivityLog.jsx'));
+const HotelManagement = lazy(() => import('../pages/admin/HotelManagement.jsx'));
 
 export default function AppRoutes() {
   return (
@@ -44,16 +45,24 @@ export default function AppRoutes() {
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="categories" element={<ManageCategories />} />
               <Route path="users" element={<ManageUsers />} />
+              <Route path="hotels" element={<HotelManagement key="hotels" />} />
+              <Route path="staff" element={<HotelManagement key="staff" staff />} />
               <Route path="media" element={<ManageMedia />} />
               <Route path="profile" element={<Profile />} />
               <Route path="activity" element={<ActivityLog />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Route>
-          <Route element={<RoleRoute role="user" />}>
+          <Route element={<RoleRoute role={['user', 'manager', 'receptionist', 'housekeeping', 'maintenance']} />}>
             <Route path="user" element={<UserLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<UserDashboard />} />
+              <Route element={<RoleRoute role={['manager', 'receptionist', 'housekeeping', 'maintenance']} />}>
+                <Route path="hotels" element={<HotelManagement key="hotels" />} />
+              </Route>
+              <Route element={<RoleRoute role="manager" />}>
+                <Route path="staff" element={<HotelManagement key="staff" staff />} />
+              </Route>
               <Route path="categories" element={<BrowseCategories />} />
               <Route path="profile" element={<Profile />} />
               <Route path="media" element={<BrowseMedia />} />

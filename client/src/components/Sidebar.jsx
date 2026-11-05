@@ -9,6 +9,7 @@ import {
   LogOut,
   Images,
   History,
+  Building2,
 } from 'lucide-react';
 import useAuth from '../hooks/useAuth.js';
 import toast from 'react-hot-toast';
@@ -20,6 +21,8 @@ export default function Sidebar() {
   const root = admin ? '/admin' : '/user';
   const links = [
     ['dashboard', 'Overview', LayoutDashboard],
+    ...(user.role !== 'user' ? [['hotels', 'Hotels & branches', Building2]] : []),
+    ...(['admin', 'manager'].includes(user.role) ? [['staff', 'Hotel staff', Users]] : []),
     ['categories', 'Categories', FolderOpen],
     ['media', 'Media library', Images],
     ...(admin ? [['users', 'Team members', Users], ['activity', 'Activity log', History]] : []),

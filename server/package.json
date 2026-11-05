@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "bootstrap:admin": "node src/seed/bootstrap-admin.js",
     "seed": "node src/seed/seed.js",
     "seed:destroy": "node src/seed/seed.js --destroy",
     "dev": "nodemon src/server.js",

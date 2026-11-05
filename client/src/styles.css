@@ -1587,3 +1587,8 @@ td.actions button {
 .password-toggle:hover { background: var(--wash); }
 .password-toggle:focus-visible, .recovery-actions .button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .recovery-notice { padding: 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--wash); color: var(--ink); line-height: 1.6; }
+/* Functional hotel administration forms reuse the starter layout. */
+.hms-form { padding: 24px; margin-bottom: 24px; }
+.hms-fields { border: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 20px 0; }
+.hms-field { display: flex; flex-direction: column; gap: 8px; }
+.hms-field input, .hms-field select { width: 100%; }

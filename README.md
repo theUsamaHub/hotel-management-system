@@ -1,4 +1,6 @@
-# Forma — MERN Starter Kit
+# LuxuryStay — Hotel Management System
+
+Hotel management built on the Forma MERN starter. Start with the [HMS module status and setup](docs/HMS-PROGRESS.md). Phase 1 adds hotels, staff accounts, hotel assignments, and hotel-scoped permissions. The remaining hotel modules are tracked in that document.
 
 A complete React + Express + Node.js + MongoDB workspace with cookie-based JWT
 authentication, admin/user access controls, category CRUD, user administration,
@@ -12,14 +14,14 @@ It explains every setting, JWT secret generation, frontend/backend setup, and wh
 Requires **Node.js 20.1+ / 22.x / 24+**, **npm 9.6.4+**, Git, and a MongoDB database (Atlas or local). See [Node/npm compatibility](docs/NODE-VERSIONS.md).
 
 ```sh
-git clone https://github.com/theUsamaHub/mern-starter-kit.git
-cd mern-starter-kit
+git clone https://github.com/theUsamaHub/hotel-management-system.git
+cd hotel-management-system
 npm run install:all
 ```
 
 1. Copy `server/.env.example` to `server/.env` and fill in the values below.
 2. Optionally copy `client/.env.example` to `client/.env`; development defaults work without it.
-3. Run `npm run seed` against a dedicated development database.
+3. Set `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `server/.env`, then run `npm run bootstrap:admin`. This adds an admin without deleting existing data. The legacy `seed` command replaces users and categories; use it only with a disposable database.
 4. Run `npm run dev` to start both applications.
 5. Open **http://localhost:5173**. The API listens on **http://localhost:5000**.
 
