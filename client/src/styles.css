@@ -1597,3 +1597,13 @@ td.actions button {
 .hms-history p { margin: 6px 0; }
 .hms-reference { display: block; overflow-wrap: anywhere; max-width: 240px; }
 .hms-note { padding: 16px; }
+.hms-totals { display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; margin: 20px 0; }
+.hms-totals dd { margin: 0; text-align: right; }
+.hms-print-root { display: none; }
+@media print {
+  body > * { display: none !important; }
+  body > .hms-print-root { display: block !important; background: white; color: black; padding: 20px; }
+  .hms-print-root table { width: 100%; border-collapse: collapse; }
+  .hms-print-root th, .hms-print-root td { color: black; background: white; border-bottom: 1px solid #ccc; padding: 8px; }
+  .hms-print-root .table-wrap { overflow: visible; }
+}

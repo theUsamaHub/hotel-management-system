@@ -80,7 +80,9 @@ export function CheckInForm({ booking, close }) {
 }
 
 function CheckoutForm({ data, close }) {
-  const [amount, setAmount] = useState(data.settlementDue.roomTotal / 100);
+  const [amount, setAmount] = useState(
+    (data.billing?.balance ?? data.settlementDue.roomTotal) / 100,
+  );
   const [method, setMethod] = useState('cash');
   const [reference, setReference] = useState('');
   const [reviewed, setReviewed] = useState(false);
@@ -98,16 +100,24 @@ function CheckoutForm({ data, close }) {
   );
   return (
     <section className="hms-form">
-      <h3>Record departure and room settlement</h3>
+      <h3>Record departure and final settlement</h3>
       <p>
         Room total:{' '}
         <strong>{money(data.settlementDue.roomTotal, data.settlementDue.currency)}</strong>. Extra
         nights after scheduled departure: {data.settlementDue.extraNights}.
       </p>
       <p>
-        This records a payment collected outside the app. It does not charge a card or create a tax
-        invoice. Taxes, services and discounts are part of the upcoming billing module.
+        Review itemized charges, tax, discounts and recorded payments in Billing & invoices first.
+        Checkout records the remaining external payment and issues the final invoice. It does not
+        charge a card.
       </p>
+      {data.billing && (
+        <p>
+          Total: {money(data.billing.total, data.billing.currency)} · Already paid:{' '}
+          {money(data.billing.paid, data.billing.currency)} · Outstanding:{' '}
+          {money(data.billing.balance, data.billing.currency)}
+        </p>
+      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -116,7 +126,7 @@ function CheckoutForm({ data, close }) {
       >
         <fieldset className="hms-fields" disabled={save.isPending}>
           <Field
-            label="Room settlement amount"
+            label="Outstanding settlement amount"
             name="amount"
             value={amount}
             change={(_name, v) => setAmount(v)}
@@ -149,7 +159,8 @@ function CheckoutForm({ data, close }) {
               checked={reviewed}
               onChange={(e) => setReviewed(e.target.checked)}
             />{' '}
-            I reviewed and collected the full room amount outside this app.
+            I reviewed the full bill and all payments, and collected any remaining amount outside
+            this app.
           </label>
         </fieldset>
         <div className="toolbar">
@@ -336,7 +347,7 @@ function StayDetails({ id, isGuest, close }) {
             )}
             {data.stay.status === 'completed' && (
               <p>
-                Recorded room settlement:{' '}
+                Recorded settlement:{' '}
                 {money(data.stay.settlement.amount, data.stay.settlement.currency)} ·{' '}
                 {data.stay.settlement.method} · Reference {data.stay.settlement.reference}
               </p>

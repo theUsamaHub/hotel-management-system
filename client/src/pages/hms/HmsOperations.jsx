@@ -8,6 +8,9 @@ import SearchRooms from './SearchRooms.jsx';
 import Reservations from './Reservations.jsx';
 import Stays from './Stays.jsx';
 import WorkOrders from './WorkOrders.jsx';
+import Billing from './Billing.jsx';
+import GuestServices from './GuestServices.jsx';
+import Feedback from './Feedback.jsx';
 
 function HotelWorkspace({ hotel, role }) {
   const isGuest = role === 'user';
@@ -24,12 +27,15 @@ function HotelWorkspace({ hotel, role }) {
           ['search', 'Find rooms'],
           ['reservations', isGuest ? 'My reservations' : 'Reservations'],
           ['stays', isGuest ? 'My stays' : 'Guest stays'],
+          ['billing', 'Billing & invoices'],
         ]
       : []),
     ...(['admin', 'manager', 'receptionist', 'housekeeping'].includes(role)
       ? [['housekeeping', 'Housekeeping']]
       : []),
     ['maintenance', isGuest ? 'Report a problem' : 'Maintenance'],
+    ['services', 'Guest services'],
+    ...(canManage || isGuest ? [['feedback', isGuest ? 'My feedback' : 'Guest feedback']] : []),
   ];
   function navigate(value) {
     setEditing(null);
@@ -50,6 +56,9 @@ function HotelWorkspace({ hotel, role }) {
         ))}
       </nav>
       {tab === 'rooms' && <Inventory hotel={hotel} role={role} />}
+      {tab === 'billing' && <Billing hotel={hotel} />}
+      {tab === 'services' && <GuestServices hotel={hotel} />}
+      {tab === 'feedback' && <Feedback hotel={hotel} isGuest={isGuest} />}
       {tab === 'stays' && <Stays hotel={hotel} isGuest={isGuest} />}
       {tab === 'housekeeping' && <WorkOrders key="housekeeping" hotel={hotel} />}
       {tab === 'maintenance' && <WorkOrders key="maintenance" hotel={hotel} maintenance />}

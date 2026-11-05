@@ -60,13 +60,15 @@ See [setup, policies, permissions, API and verification](HMS-ROOMS-RESERVATIONS.
 
 Phase 3 is implemented on `feat/hms-stays-operations`: check-in/out, guest verification, key accounting, cleaning scheduling/assignment/completion, maintenance reports and repairs, room blocks and audit history. See [stay operations guide](HMS-STAYS-OPERATIONS.md). This branch records external room-only checkout settlement; full billing follows in Phase 4.
 
+Phase 4 is implemented on `feat/hms-billing-guest-services`: service catalog/requests/assignment/completion, automatic service charges, itemized bills, manager-authorized discounts/taxes, external payment records, finalized printable/email invoices and guest feedback. It replaces temporary room-only settlement with full account reconciliation at checkout. See [billing/services guide](HMS-BILLING-SERVICES.md).
+
 - Phase 2: implemented in the core operations branch above.
 - Phase 3: implemented in the stay-operations branch above.
-- Phase 4: guest services, charges, invoices, payments and feedback.
+- Phase 4: implemented in the financial/guest-services branch above.
 - Phase 5: policies, taxes, operational notifications and reporting.
 - Phase 6: full workflow tests, security/performance checks, user documentation and demo.
 
-Phases 4–6 remain outstanding. Keep each subsequent module on a feature branch. Existing category/media demos remain available until replaced by hotel workflows.
+Phases 5–6 remain outstanding. Keep each subsequent module on a feature branch. Existing category/media demos remain available until replaced by hotel workflows.
 
 ## Validation
 

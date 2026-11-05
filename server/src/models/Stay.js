@@ -9,6 +9,7 @@ const schema = new mongoose.Schema({
   verificationNote: { type: String, required: true, maxlength: 300 },
   version: { type: Number, default: 0 },
   settlement: {
+    invoice: { type: mongoose.Schema.Types.ObjectId, ref: 'Invoice' },
     amount: Number, currency: String, roomTotal: Number, extraNights: Number,
     method: String, reference: String, reviewedAt: Date,
     reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

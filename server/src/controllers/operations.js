@@ -12,6 +12,7 @@ import escapeRegex from '../utils/escapeRegex.js';
 import { audit } from '../utils/audit.js';
 import { queueEmail } from '../utils/email.js';
 import { hotelAccess, paged, transact, today, roomState, ensureCleaning, syncMaintenance } from '../services/hotelOperations.js';
+import { roomSettlement, billFor, finalizeCheckout } from '../services/billing.js';
 
 const manage = (req) => ['admin', 'manager'].includes(req.user.role);
 const desk = (req) => ['admin', 'manager', 'receptionist'].includes(req.user.role);
@@ -73,10 +74,6 @@ export async function checkIn(req, res) {
   });
   res.status(201).json({ success: true, stay });
 }
-export function roomSettlement(booking) {
-  const extraNights = Math.max(0, Math.floor((Date.parse(today()) - Date.parse(booking.checkOut)) / 86400000));
-  return { roomTotal: booking.quote.total + extraNights * booking.quote.rate, extraNights, currency: booking.quote.currency };
-}
 export async function listStays(req, res) {
   await hotelAccess(req, req.query.hotel, null, false);
   const filter = { hotel: req.query.hotel, ...(req.query.status ? { status: req.query.status } : {}), ...(req.user.role === 'user' ? { owner: req.user._id } : {}) };
@@ -90,7 +87,7 @@ export async function stayDetail(req, res) {
   const stay = await stayFor(req, req.params.id);
   const booking = await Reservation.findById(stay.reservation);
   const keys = await StayKey.find({ stay: stay._id }).sort({ issuedAt: 1 });
-  res.json({ success: true, stay, reservation: booking, keys, settlementDue: stay.status === 'active' ? roomSettlement(booking) : stay.settlement });
+  res.json({ success: true, stay, reservation: booking, keys, billing: await billFor(stay), settlementDue: stay.status === 'active' ? roomSettlement(booking) : stay.settlement });
 }
 export async function issueKey(req, res) {
   let key;
@@ -135,17 +132,16 @@ export async function checkout(req, res) {
     const room = await Room.findById(stay.room).session(session);
     if (booking.status !== 'checked_in' || room.status !== 'occupied') throw new ApiError(409, 'Stay and room state must be reconciled before checkout');
     if (await StayKey.exists({ stay: stay._id, status: 'issued' }).session(session)) throw new ApiError(409, 'Record return or loss of every issued key before checkout');
-    const due = roomSettlement(booking);
-    if (req.body.amount !== due.roomTotal || req.body.currency !== due.currency) throw new ApiError(409, 'Recorded settlement must match the current room total and currency');
+    const due = await finalizeCheckout(req, stay, req.body, session);
     stay.set({ status: 'completed', checkedOutAt: new Date(), checkedOutBy: req.user._id, version: stay.version + 1,
-      settlement: { ...due, amount: req.body.amount, method: req.body.method, reference: req.body.reference, reviewedAt: new Date(), reviewedBy: req.user._id } });
+      settlement: { roomTotal: due.roomTotal, extraNights: due.extraNights, currency: due.currency, amount: due.total, invoice: due.invoice._id, method: req.body.amount ? req.body.method : 'recorded_payments', reference: req.body.reference, reviewedAt: new Date(), reviewedBy: req.user._id } });
     await stay.save({ session });
     booking.status = 'checked_out'; booking.version += 1; await booking.save({ session });
     await roomState(req, room, room.maintenanceBlocked ? 'maintenance' : 'cleaning', `Guest checked out: ${booking.reference}`, session);
     const task = await ensureCleaning(req, room, 'Departure cleaning required', session);
     await audit(req, 'stay.check_out', stay._id, { settlement: stay.settlement.toObject(), cleaningTask: String(task._id) }, session);
     await audit(req, 'reservation.check_out', booking._id, { stay: String(stay._id) }, session);
-    await queueEmail(booking.contact.email, 'LuxuryStay check-out recorded', `Your departure for ${booking.reference} has been recorded. Room-only external settlement: ${(due.roomTotal / 100).toFixed(2)} ${due.currency}. Reference: ${req.body.reference}. This is not a tax invoice.`, undefined, session);
+    await queueEmail(booking.contact.email, 'LuxuryStay check-out recorded', `Your departure for ${booking.reference} has been recorded. Invoice ${due.invoice.number} is paid in full: ${(due.total / 100).toFixed(2)} ${due.currency}. The itemized invoice has been emailed separately.`, undefined, session);
   });
   res.json({ success: true, stay });
 }

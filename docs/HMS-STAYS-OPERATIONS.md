@@ -54,3 +54,5 @@ All routes use `/api/hms`, existing authentication/CSRF protection, hotel scopin
 ## Verification
 
 `npm test`, `npm run lint`, `npm run build`. Operations tests use an isolated MongoDB replica set and cover arrival-to-ready workflow, races, key ownership/uniqueness, lost keys, multiple blockers, reopening, assignment validation, guest/hotel isolation, schedules, overdue charges and rollback on email failure. UI tests cover verification, keys, settlement, scheduling and guest/worker repair actions.
+
+The stay-operations branch was validated with 107 backend and 46 frontend tests, lint and production build before being pushed. The financial branch adds to that coverage and supersedes the temporary room-only settlement flow.

@@ -2,6 +2,8 @@
 
 Hotel management built on the Forma MERN starter. Start with the [HMS module status and setup](docs/HMS-PROGRESS.md). The foundation provides hotels, staff and scoped permissions. [Core hotel operations](docs/HMS-ROOMS-RESERVATIONS.md) add room types, inventory, guest profiles, availability and reservations. The remaining modules are tracked in the progress document.
 
+[Stay operations](docs/HMS-STAYS-OPERATIONS.md) add check-in/out, keys, cleaning tasks and maintenance. [Billing and guest services](docs/HMS-BILLING-SERVICES.md) add itemized accounts, payments, invoices, services and feedback. Open **Hotel operations** or **Book a stay** after signing in.
+
 A complete React + Express + Node.js + MongoDB workspace with cookie-based JWT
 authentication, admin/user access controls, category CRUD, user administration,
 responsive dark mode, shared media uploads, and isolated automated tests.
