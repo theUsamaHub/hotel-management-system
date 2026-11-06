@@ -279,3 +279,5 @@ Production now requires a configured mail provider. Existing users must sign in
 again after upgrading to the new session model; no database reseeding is needed.
 
 Hotel administration, policy inheritance, notifications, reports and monitoring: [module guide](docs/HMS-ADMINISTRATION-REPORTING.md).
+
+Hotel workflow and release acceptance: [release guide](docs/HMS-RELEASE-GUIDE.md).

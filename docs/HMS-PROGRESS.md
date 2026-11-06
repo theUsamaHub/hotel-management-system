@@ -77,3 +77,7 @@ Run `npm run lint`, `npm test`, and `npm run build`. Server tests use an isolate
 Validated for the administration/reporting increment: 129 backend and 57 frontend tests passed; final focused policy/report/activity tests also passed (9 backend, 12 frontend). Lint and production build passed. Tests used isolated MongoDB instances; Atlas startup and health checks passed; no demo seed or admin bootstrap was run against Atlas. Phase 6 browser/load/deployment validation remains pending.
 
 If the MongoDB test download is unavailable, set `MONGOMS_SYSTEM_BINARY` to a local `mongod` executable before running backend tests. Tests still launch a fresh isolated database rather than connecting to an existing MongoDB service.
+
+## Release validation increment
+
+Added an authenticated API acceptance scenario covering setup through final billing, cleaning, feedback and reports. See [release and user guide](HMS-RELEASE-GUIDE.md). Browser acceptance, load testing, deployment verification and demo recording remain pending.
