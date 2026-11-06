@@ -18,12 +18,12 @@ export function decodeEmail(payload) {
     throw Object.assign(new Error('Queued email cannot be decrypted'), { code: 'EMAIL_DECRYPTION_FAILED' });
   }
 }
-export async function queueEmail(to, subject, text, expiresAt = new Date(Date.now() + 86400000)) {
+export async function queueEmail(to, subject, text, expiresAt = new Date(Date.now() + 86400000), session) {
   const iv = randomBytes(12);
   const cipher = createCipheriv('aes-256-gcm', key, iv);
   const ciphertext = Buffer.concat([cipher.update(JSON.stringify({ to, subject, text })), cipher.final()]);
   const payload = [iv, cipher.getAuthTag(), ciphertext].map((part) => part.toString('base64url')).join('.');
-  await EmailJob.create({ payload, keyId, expiresAt });
+  await EmailJob.create([{ payload, keyId, expiresAt }], { session });
 }
 let transporter;
 export const emailDelivery = {

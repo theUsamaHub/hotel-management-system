@@ -23,6 +23,7 @@ const BrowseMedia = lazy(() => import('../pages/user/BrowseMedia.jsx'));
 const AccountLink = lazy(() => import('../pages/public/AccountLink.jsx'));
 const ActivityLog = lazy(() => import('../pages/admin/ActivityLog.jsx'));
 const HotelManagement = lazy(() => import('../pages/admin/HotelManagement.jsx'));
+const HmsOperations = lazy(() => import('../pages/hms/HmsOperations.jsx'));
 
 export default function AppRoutes() {
   return (
@@ -47,6 +48,7 @@ export default function AppRoutes() {
               <Route path="users" element={<ManageUsers />} />
               <Route path="hotels" element={<HotelManagement key="hotels" />} />
               <Route path="staff" element={<HotelManagement key="staff" staff />} />
+              <Route path="operations" element={<HmsOperations />} />
               <Route path="media" element={<ManageMedia />} />
               <Route path="profile" element={<Profile />} />
               <Route path="activity" element={<ActivityLog />} />
@@ -57,6 +59,7 @@ export default function AppRoutes() {
             <Route path="user" element={<UserLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<UserDashboard />} />
+              <Route path="operations" element={<HmsOperations />} />
               <Route element={<RoleRoute role={['manager', 'receptionist', 'housekeeping', 'maintenance']} />}>
                 <Route path="hotels" element={<HotelManagement key="hotels" />} />
               </Route>

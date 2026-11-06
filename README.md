@@ -1,6 +1,8 @@
 # LuxuryStay — Hotel Management System
 
-Hotel management built on the Forma MERN starter. Start with the [HMS module status and setup](docs/HMS-PROGRESS.md). Phase 1 adds hotels, staff accounts, hotel assignments, and hotel-scoped permissions. The remaining hotel modules are tracked in that document.
+Hotel management built on the Forma MERN starter. Start with the [HMS module status and setup](docs/HMS-PROGRESS.md). The foundation provides hotels, staff and scoped permissions. [Core hotel operations](docs/HMS-ROOMS-RESERVATIONS.md) add room types, inventory, guest profiles, availability and reservations. The remaining modules are tracked in the progress document.
+
+[Stay operations](docs/HMS-STAYS-OPERATIONS.md) add check-in/out, keys, cleaning tasks and maintenance. [Billing and guest services](docs/HMS-BILLING-SERVICES.md) add itemized accounts, payments, invoices, services and feedback. Open **Hotel operations** or **Book a stay** after signing in.
 
 A complete React + Express + Node.js + MongoDB workspace with cookie-based JWT
 authentication, admin/user access controls, category CRUD, user administration,
@@ -275,3 +277,7 @@ SMTP/HTTPS email setup, API routes, and upgrade instructions.
 
 Production now requires a configured mail provider. Existing users must sign in
 again after upgrading to the new session model; no database reseeding is needed.
+
+Hotel administration, policy inheritance, notifications, reports and monitoring: [module guide](docs/HMS-ADMINISTRATION-REPORTING.md).
+
+Hotel workflow and release acceptance: [release guide](docs/HMS-RELEASE-GUIDE.md).

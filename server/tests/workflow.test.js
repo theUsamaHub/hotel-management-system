@@ -1,0 +1,45 @@
+import { test, expect } from '@jest/globals';
+import { session } from './helpers.js';
+import StayKey from '../src/models/StayKey.js';
+import HousekeepingTask from '../src/models/HousekeepingTask.js';
+process.env.HMS_TRANSACTION_TESTS = '1';
+const date = (days) => new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
+test('API acceptance: setup, guest booking, service, payment, departure, cleaning, feedback and reporting', async () => {
+  const admin = await session(); const guest = await session('user');
+  async function post(actor, path, data, status = 201) {
+    const response = await actor.agent.post(`/api${path}`).send(data);
+    expect({ status: response.status, error: response.body.message }).toEqual({ status, error: undefined });
+    return response.body;
+  }
+  const { hotel } = await post(admin, '/hotels', { name: 'Acceptance Hotel', code: 'ACCEPT', address: 'Test Road', city: 'Karachi', country: 'Pakistan', email: 'hotel@example.com' });
+  const { roomType } = await post(admin, '/hms/room-types', { hotel: hotel._id, name: 'Double', capacity: 2, rate: 10000, currency: 'PKR' });
+  const { room } = await post(admin, '/hms/rooms', { hotel: hotel._id, roomType: roomType._id, number: '101' });
+  const { guest: profile } = await post(guest, '/hms/guests', { hotel: hotel._id, name: 'Guest', email: 'guest@example.com', phone: '12345' });
+  const { reservation } = await post(guest, '/hms/reservations', { hotel: hotel._id, room: room._id, guest: profile._id, checkIn: date(0), checkOut: date(2), occupants: 1 });
+  await post(admin, `/hms/reservations/${reservation._id}/confirm`, { version: 0 }, 200);
+  const { stay } = await post(admin, `/hms/reservations/${reservation._id}/check-in`, { version: 1, guestVerified: true, verificationNote: 'Verified in person', keys: ['101-A'] });
+  const { service } = await post(admin, '/hms/services', { hotel: hotel._id, name: 'Laundry', unitPrice: 500, currency: 'PKR' });
+  const { request } = await post(guest, '/hms/service-requests', { stay: stay._id, service: service._id, quantity: 2 });
+  await post(admin, `/hms/service-requests/${request._id}/action`, { version: 0, action: 'start', notes: 'Collected' }, 200);
+  await post(admin, `/hms/service-requests/${request._id}/action`, { version: 1, action: 'complete', notes: 'Delivered' }, 200);
+  const bill = async () => (await admin.agent.get(`/api/hms/stays/${stay._id}/bill`)).body.bill;
+  let current = await bill();
+  expect(current.total).toBe(21000);
+  await post(admin, `/hms/stays/${stay._id}/payments`, { version: current.version, amount: 5000, method: 'cash', reference: 'DEPOSIT' });
+  current = await bill();
+  const key = await StayKey.findOne({ stay: stay._id });
+  await post(admin, `/hms/stays/${stay._id}/keys/${key.id}/close`, { version: current.version, status: 'returned', note: 'Returned' }, 200);
+  current = await bill();
+  await post(admin, `/hms/stays/${stay._id}/check-out`, { version: current.version, billingReviewed: true, amount: 16000, currency: 'PKR', method: 'cash', reference: 'FINAL' }, 200);
+  expect(await bill()).toMatchObject({ status: 'issued', total: 21000, paid: 21000, balance: 0 });
+  const task = await HousekeepingTask.findOne({ room: room._id, open: true });
+  await post(admin, `/hms/housekeeping/${task.id}/action`, { version: task.version, action: 'start', notes: 'Started' }, 200);
+  await post(admin, `/hms/housekeeping/${task.id}/action`, { version: task.version + 1, action: 'complete', notes: 'Inspected' }, 200);
+  const available = await guest.agent.get('/api/hms/availability').query({ hotel: hotel._id, checkIn: date(0), checkOut: date(1), occupants: 1 });
+  expect(available.body.rooms.map((r) => r._id)).toContain(room._id);
+  await post(guest, '/hms/feedback', { stay: stay._id, rating: 5, comment: 'Excellent stay' });
+  const report = (await admin.agent.get('/api/hms/reports').query({ hotel: hotel._id, from: date(0), to: date(1) })).body.report;
+  expect(report.payments).toEqual([{ _id: 'PKR', amount: 21000, count: 2 }]);
+  expect(report.feedback).toMatchObject({ count: 1, average: 5 });
+  expect((await guest.agent.get('/api/hms/notifications').query({ hotel: hotel._id })).body.pagination.total).toBeGreaterThan(0);
+});

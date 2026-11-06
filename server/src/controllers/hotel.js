@@ -5,6 +5,8 @@ import ApiError from '../utils/ApiError.js';
 import escapeRegex from '../utils/escapeRegex.js';
 import { STAFF_ROLES } from '../config/roles.js';
 import { audit } from '../utils/audit.js';
+import mongoose from 'mongoose';
+import Reservation from '../models/Reservation.js';
 
 export async function listHotels(req, res) {
   const { page, limit, search } = req.query;
@@ -35,9 +37,13 @@ export async function createHotel(req, res) {
 }
 
 export async function updateHotel(req, res) {
-  const hotel = await Hotel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true, runValidators: true });
-  if (!hotel) throw new ApiError(404, 'Hotel not found');
-  await audit(req, 'hotel.update', hotel._id, { isActive: hotel.isActive });
+  let hotel;
+  await mongoose.connection.transaction(async (session) => {
+    hotel = await Hotel.findByIdAndUpdate(req.params.id, { $set: req.body, $inc: { operationVersion: 1 } }, { new: true, runValidators: true, session });
+    if (!hotel) throw new ApiError(404, 'Hotel not found');
+    if (!hotel.isActive && await Reservation.exists({ hotel: hotel._id, $or: [{ status: 'checked_in' }, { status: { $in: ['pending', 'confirmed'] }, checkOut: { $gt: new Date().toISOString().slice(0, 10) } }] }).session(session)) throw new ApiError(409, 'Cancel or complete active reservations before deactivating the hotel');
+    await audit(req, 'hotel.update', hotel._id, { isActive: hotel.isActive }, session);
+  });
   res.json({ success: true, hotel });
 }
 

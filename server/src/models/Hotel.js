@@ -9,6 +9,7 @@ const hotelSchema = new mongoose.Schema({
   email: { type: String, required: true, lowercase: true, trim: true },
   phone: { type: String, trim: true, maxlength: 30, default: '' },
   isActive: { type: Boolean, default: true },
+  operationVersion: { type: Number, default: 0, select: false },
 }, { timestamps: true });
 
 export default mongoose.model('Hotel', hotelSchema);

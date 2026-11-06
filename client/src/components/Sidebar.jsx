@@ -21,6 +21,7 @@ export default function Sidebar() {
   const root = admin ? '/admin' : '/user';
   const links = [
     ['dashboard', 'Overview', LayoutDashboard],
+    ['operations', user.role === 'user' ? 'Book a stay' : 'Hotel operations', Building2],
     ...(user.role !== 'user' ? [['hotels', 'Hotels & branches', Building2]] : []),
     ...(['admin', 'manager'].includes(user.role) ? [['staff', 'Hotel staff', Users]] : []),
     ['categories', 'Categories', FolderOpen],

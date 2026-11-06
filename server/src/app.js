@@ -1,3 +1,4 @@
+import { monitoring } from './middleware/monitoring.js';
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -13,6 +14,7 @@ import errorHandler from './middleware/error.js';
 const app = express();
 const { corsOptions, protectWrites } = browserSecurity(env);
 app.disable('x-powered-by');
+app.use(monitoring);
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(protectWrites);

@@ -1,6 +1,6 @@
 # LuxuryStay HMS module tracker
 
-## Current increment: foundation
+## Foundation — merged into main
 
 Implemented on `feat/hms-foundation`:
 
@@ -43,20 +43,41 @@ Hotel fields: `name`, `code`, `address`, `city`, `country`, `email`, `phone`, `i
 Staff creation: `name`, `email`, `password`, `role`, `hotel`, `phone`, `jobTitle`, `isActive`.
 Staff update: same editable fields excluding `email` and `password`, which retain the existing verified email/password account workflows.
 
+## Core operations — feat/hms-rooms-reservations
+
+- [x] Room types, capacities, prices and currencies.
+- [x] Room creation/editing, activation, physical status and history.
+- [x] Guest contact profiles and preferences, including guest self-service.
+- [x] Date-based availability with capacity and readiness checks.
+- [x] Guest and reception bookings, confirmation, modification, room reassignment and cancellation.
+- [x] Transactional double-booking prevention, including concurrent requests.
+- [x] Historical booking prices, mutation audit history and durable notification emails.
+- [x] Basic staff/guest screens at `/admin/operations` and `/user/operations`.
+
+See [setup, policies, permissions, API and verification](HMS-ROOMS-RESERVATIONS.md).
+
 ## Next module branches
 
-- Phase 2: room types, room inventory/status, guest profiles and reservations with concurrency-safe overlap prevention.
-- Phase 3: check-in/out, key records, housekeeping and maintenance.
-- Phase 4: guest services, charges, invoices, payments and feedback.
-- Phase 5: policies, taxes, operational notifications and reporting.
+Phase 3 is implemented on `feat/hms-stays-operations`: check-in/out, guest verification, key accounting, cleaning scheduling/assignment/completion, maintenance reports and repairs, room blocks and audit history. See [stay operations guide](HMS-STAYS-OPERATIONS.md). This branch records external room-only checkout settlement; full billing follows in Phase 4.
+
+Phase 4 is implemented on `feat/hms-billing-guest-services`: service catalog/requests/assignment/completion, automatic service charges, itemized bills, manager-authorized discounts/taxes, external payment records, finalized printable/email invoices and guest feedback. It replaces temporary room-only settlement with full account reconciliation at checkout. See [billing/services guide](HMS-BILLING-SERVICES.md).
+
+- Phase 2: implemented in the core operations branch above.
+- Phase 3: implemented in the stay-operations branch above.
+- Phase 4: implemented in the financial/guest-services branch above.
+- Phase 5: implemented on `feat/hms-policies-notifications-reports`: global/hotel policies, saved booking terms, pricing and tax rules, staff/guest notification inboxes, operational/financial reports, baseline demand estimates and process monitoring. See [administration and reporting guide](HMS-ADMINISTRATION-REPORTING.md).
 - Phase 6: full workflow tests, security/performance checks, user documentation and demo.
 
-These later phases are not implemented by this foundation increment. Keep each subsequent module on a feature branch. Existing category/media demos remain available until replaced by hotel workflows.
+Phase 6 remains outstanding. Forecasts are baseline estimates and monitoring is process-local; production performance/uptime targets are not yet verified. Keep each subsequent module on a feature branch. Existing category/media demos remain available until replaced by hotel workflows.
 
 ## Validation
 
 Run `npm run lint`, `npm test`, and `npm run build`. Server tests use an isolated in-memory MongoDB, not the configured Atlas database. HMS tests cover cross-hotel isolation, forbidden guest access, input validation, inactive hotel assignments, password hashing, session revocation and audit events.
 
-Validated for this increment: lint and production build passed; 75 backend and 34 frontend tests passed (the cross-site suite was rerun after fixing dotenv isolation). Atlas connectivity was verified with a read-only ping. No demo seed or admin bootstrap was run against Atlas. The first admin still needs your chosen credentials through the setup command above.
+Validated for the administration/reporting increment: 129 backend and 57 frontend tests passed; final focused policy/report/activity tests also passed (9 backend, 12 frontend). Lint and production build passed. Tests used isolated MongoDB instances; Atlas startup and health checks passed; no demo seed or admin bootstrap was run against Atlas. Phase 6 browser/load/deployment validation remains pending.
 
 If the MongoDB test download is unavailable, set `MONGOMS_SYSTEM_BINARY` to a local `mongod` executable before running backend tests. Tests still launch a fresh isolated database rather than connecting to an existing MongoDB service.
+
+## Release validation increment
+
+Added an authenticated API acceptance scenario covering setup through final billing, cleaning, feedback and reports. See [release and user guide](HMS-RELEASE-GUIDE.md). Browser acceptance, load testing, deployment verification and demo recording remain pending.

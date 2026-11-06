@@ -1592,3 +1592,18 @@ td.actions button {
 .hms-fields { border: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 20px 0; }
 .hms-field { display: flex; flex-direction: column; gap: 8px; }
 .hms-field input, .hms-field select { width: 100%; }
+.hms-tabs, .hms-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.hms-history { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.hms-history p { margin: 6px 0; }
+.hms-reference { display: block; overflow-wrap: anywhere; max-width: 240px; }
+.hms-note { padding: 16px; }
+.hms-totals { display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; margin: 20px 0; }
+.hms-totals dd { margin: 0; text-align: right; }
+.hms-print-root { display: none; }
+@media print {
+  body > * { display: none !important; }
+  body > .hms-print-root { display: block !important; background: white; color: black; padding: 20px; }
+  .hms-print-root table { width: 100%; border-collapse: collapse; }
+  .hms-print-root th, .hms-print-root td { color: black; background: white; border-bottom: 1px solid #ccc; padding: 8px; }
+  .hms-print-root .table-wrap { overflow: visible; }
+}
