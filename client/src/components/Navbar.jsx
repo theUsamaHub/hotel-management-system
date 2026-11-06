@@ -8,7 +8,7 @@ export default function Navbar() {
         <span className="brand-mark">
           <Layers3 size={22} />
         </span>
-        forma<span className="brand-dot">®</span>
+        LuxuryStay<span className="brand-dot">®</span>
       </Link>
       <nav aria-label="Main navigation">
         <Link to="/login">Sign in</Link>

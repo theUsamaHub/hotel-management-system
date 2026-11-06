@@ -7,7 +7,7 @@ export default function PublicLayout() {
       <Navbar />
       <Outlet />
       <footer>
-        © {new Date().getFullYear()} Forma Workspace{' '}
+        © {new Date().getFullYear()} LuxuryStay Hospitality{' '}
         <span>A little structure. A lot of possibility.</span>
       </footer>
     </div>

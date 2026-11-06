@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import {
   Layers3,
@@ -16,6 +17,7 @@ import toast from 'react-hot-toast';
 import { errorMessage } from '../api/axios.js';
 
 export default function Sidebar() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const admin = user.role === 'admin';
   const root = admin ? '/admin' : '/user';
@@ -26,28 +28,41 @@ export default function Sidebar() {
     ...(['admin', 'manager'].includes(user.role) ? [['staff', 'Hotel staff', Users]] : []),
     ['categories', 'Categories', FolderOpen],
     ['media', 'Media library', Images],
-    ...(admin ? [['users', 'Team members', Users], ['activity', 'Activity log', History]] : []),
+    ...(admin
+      ? [
+          ['users', 'Team members', Users],
+          ['activity', 'Activity log', History],
+        ]
+      : []),
     ['profile', 'Account settings', UserRound],
   ];
   return (
-    <aside className="sidebar" data-lenis-prevent>
+    <aside className={`sidebar ${menuOpen ? 'menu-open' : ''}`} data-lenis-prevent>
       <Link to="/" className="brand">
         <span className="brand-mark">
           <Layers3 size={22} />
         </span>
-        forma<span className="brand-dot">®</span>
+        LuxuryStay<span className="brand-dot">®</span>
       </Link>
       <div className="workspace-label">
-        <span className="workspace-icon">F</span>
+        <span className="workspace-icon">L</span>
         <div>
-          My workspace<small>{admin ? 'Administrator' : 'Personal account'}</small>
+          Hotel workspace<small>{user.role === 'user' ? 'Guest account' : 'Hotel team'}</small>
         </div>
-        <span className="badge">{admin ? 'ADMIN' : 'USER'}</span>
+        <span className="badge">{user.role.toUpperCase()}</span>
       </div>
       <p className="eyebrow">Workspace</p>
-      <nav aria-label="Workspace navigation">
+      <button
+        className="button secondary mobile-menu"
+        aria-expanded={menuOpen}
+        aria-controls="workspace-navigation"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        {menuOpen ? 'Close navigation' : 'Menu'}
+      </button>
+      <nav id="workspace-navigation" aria-label="Workspace navigation">
         {links.map(([path, label, Icon]) => (
-          <NavLink key={path} to={`${root}/${path}`}>
+          <NavLink onClick={() => setMenuOpen(false)} key={path} to={`${root}/${path}`}>
             <Icon size={18} />
             {label}
           </NavLink>
@@ -63,7 +78,7 @@ export default function Sidebar() {
             More room for what matters.
           </p>
           <Link to="/">
-            Explore Forma <ArrowUpRight size={14} />
+            Explore LuxuryStay <ArrowUpRight size={14} />
           </Link>
         </div>
         <button
