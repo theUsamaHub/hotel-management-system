@@ -1,89 +1,90 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, BedDouble, CalendarDays, ShieldCheck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { GuestHero, GuestCTA, FeatureGrid } from './GuestPage.jsx';
 export default function Home() {
   return (
-    <main className="linear-home">
-      <section className="linear-hero">
-        <span className="eyebrow">LuxuryStay / Hospitality, connected</span>
-        <h1>
-          A considered stay.
-          <br />
-          Every detail connected.
-        </h1>
-        <p>
-          From your first reservation to your final checkout. One place for guests to plan their
-          stay and hotel teams to keep everything running.
-        </p>
+    <main className="guest-site">
+      <GuestHero
+        eyebrow="Welcome to LuxuryStay"
+        title={
+          <>
+            Stay a little longer.
+            <br />
+            Feel a little more at home.
+          </>
+        }
+        description="Space to unwind. Details taken care of. Discover your next stay and keep every part of the journey beautifully simple."
+      >
         <div className="linear-actions">
-          <Link className="button" to="/register">
-            Plan your stay <ArrowRight size={16} />
+          <Link to="/stays" className="button">
+            Discover your stay <ArrowRight size={16} />
           </Link>
-          <Link className="button secondary" to="/login">
-            Sign in to your workspace
+          <Link to="/about" className="button secondary">
+            Meet LuxuryStay
           </Link>
         </div>
-      </section>
-      <section className="linear-preview" aria-label="Example hotel operations preview">
-        <div className="linear-preview-header">
-          <strong>Hotel operations</strong>
-          <span className="muted">Illustrative workspace / Daily overview</span>
+        <p className="hero-footnote">Your reservations, services and stay details. Together.</p>
+      </GuestHero>
+      <section className="guest-section">
+        <div className="guest-section-heading">
+          <div>
+            <p className="eyebrow">Designed around your visit</p>
+            <h2>
+              Room for everything
+              <br />
+              that makes a stay yours.
+            </h2>
+          </div>
+          <Link to="/services">Explore guest services →</Link>
         </div>
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Room</th>
-                <th>Category</th>
-                <th>Room status</th>
-                <th>Next action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>101</td>
-                <td>Deluxe king</td>
-                <td>
-                  <span className="badge">Ready</span>
-                </td>
-                <td>Welcome the next arrival</td>
-              </tr>
-              <tr>
-                <td>204</td>
-                <td>Garden suite</td>
-                <td>
-                  <span className="badge">Occupied</span>
-                </td>
-                <td>Manage guest services</td>
-              </tr>
-              <tr>
-                <td>308</td>
-                <td>Premium twin</td>
-                <td>
-                  <span className="badge">Cleaning</span>
-                </td>
-                <td>Prepare for check-in</td>
-              </tr>
-            </tbody>
-          </table>
+        <FeatureGrid />
+      </section>
+      <section className="guest-section guest-split">
+        <div>
+          <p className="eyebrow">The LuxuryStay experience</p>
+          <h2>
+            Arrive with plans.
+            <br />
+            Leave with memories.
+          </h2>
+          <p>
+            Whether your visit is a quick pause or a longer escape, keep the practical details
+            simple. Find your room, follow your booking and connect with your hotel through one
+            guest account.
+          </p>
+          <Link className="button secondary" to="/about">
+            Our approach to hospitality
+          </Link>
+        </div>
+        <div className="guest-story card">
+          <span className="eyebrow">A connected guest journey</span>
+          <ol className="guest-steps">
+            <li>
+              <strong>Before you arrive</strong>
+              <p>Explore availability and review your booking terms.</p>
+            </li>
+            <li>
+              <strong>While you are here</strong>
+              <p>Request available services and let the team know what you need.</p>
+            </li>
+            <li>
+              <strong>Until next time</strong>
+              <p>Access your invoice and share your experience.</p>
+            </li>
+          </ol>
         </div>
       </section>
-      <section className="linear-features" aria-label="Hotel platform features">
-        <article>
-          <CalendarDays size={24} />
-          <h2>Your stay, simplified.</h2>
-          <p>Find available rooms, manage reservations and keep your stay details together.</p>
-        </article>
-        <article>
-          <BedDouble size={24} />
-          <h2>Hospitality in sync.</h2>
-          <p>Connect the front desk, housekeeping and maintenance through one shared workflow.</p>
-        </article>
-        <article>
-          <ShieldCheck size={24} />
-          <h2>Clarity at every step.</h2>
-          <p>Review itemized bills, recorded payments and hotel policies in your account.</p>
-        </article>
+      <section className="guest-section guest-section-heading">
+        <div>
+          <p className="eyebrow">A little reassurance</p>
+          <h2>Questions before you arrive?</h2>
+          <p>Our guest guide explains reservations, services, payments and more.</p>
+        </div>
+        <Link className="button secondary" to="/help">
+          Read the guest guide
+        </Link>
       </section>
+      <GuestCTA />
     </main>
   );
 }

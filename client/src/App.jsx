@@ -1,3 +1,4 @@
+import ThemeToggle from './components/ThemeToggle.jsx';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext.jsx';
 import AppRoutes from './routes/AppRoutes.jsx';
@@ -11,9 +12,15 @@ export default function App() {
         <Toaster
           position="top-right"
           toastOptions={{
-            style: { background: '#18191a', color: '#f7f8f8', border: '1px solid #34343a' },
+            style: {
+              background: 'var(--surface)',
+              color: 'var(--ink)',
+              border: '1px solid var(--line)',
+              borderRadius: '16px',
+            },
           }}
         />
+        <ThemeToggle />
         <PageTransition>
           <AppRoutes />
         </PageTransition>

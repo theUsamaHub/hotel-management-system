@@ -7,7 +7,7 @@ import Loader from '../../components/Loader.jsx';
 import ErrorState from '../../components/ErrorState.jsx';
 import MediaLibrary from '../../components/MediaLibrary.jsx';
 
-export default function UserDashboard() {
+function StaffDashboard() {
   const { user } = useAuth();
   const query = useCategories({ limit: 3, isActive: true });
   return (
@@ -66,6 +66,39 @@ export default function UserDashboard() {
         <Link to="/user/media">Browse all ↗</Link>
       </div>
       <MediaLibrary compact />
+    </>
+  );
+}
+
+export default function UserDashboard() {
+  const { user } = useAuth();
+  if (user.role !== 'user') return <StaffDashboard />;
+  return (
+    <>
+      <section className="guest-account-hero">
+        <p className="eyebrow">Your LuxuryStay</p>
+        <h1>Welcome back, {user.name.split(' ')[0]}.</h1>
+        <p>Your next stay, and every detail that comes with it.</p>
+        <Link className="button" to="/user/operations">
+          Find a room <ArrowUpRight size={16} />
+        </Link>
+      </section>
+      <div className="guest-feature-grid">
+        {[
+          ['reservations', 'My reservations', 'Follow, change or cancel your bookings.'],
+          ['stays', 'My stays', 'View arrival, departure and room details.'],
+          ['services', 'Guest services', 'Request available services during your stay.'],
+          ['billing', 'My invoices', 'Review charges, payments and invoices.'],
+          ['feedback', 'My feedback', 'Share your experience after your stay.'],
+          ['profile', 'My account', 'Keep your contact and security details up to date.'],
+        ].map(([path, title, text]) => (
+          <Link className="card guest-account-card" key={path} to={`/user/${path}`}>
+            <h2>{title}</h2>
+            <p>{text}</p>
+            <ArrowUpRight size={20} />
+          </Link>
+        ))}
+      </div>
     </>
   );
 }

@@ -26,8 +26,16 @@ export default function Sidebar() {
     ['operations', user.role === 'user' ? 'Book a stay' : 'Hotel operations', Building2],
     ...(user.role !== 'user' ? [['hotels', 'Hotels & branches', Building2]] : []),
     ...(['admin', 'manager'].includes(user.role) ? [['staff', 'Hotel staff', Users]] : []),
-    ['categories', 'Categories', FolderOpen],
-    ['media', 'Media library', Images],
+    ...(user.role === 'user'
+      ? [
+          ['reservations', 'My reservations', History],
+          ['stays', 'My stays', Building2],
+          ['services', 'Guest services', Layers3],
+          ['billing', 'My invoices', FolderOpen],
+          ['feedback', 'My feedback', UserRound],
+        ]
+      : [['categories', 'Categories', FolderOpen]]),
+    ...(user.role !== 'user' ? [['media', 'Media library', Images]] : []),
     ...(admin
       ? [
           ['users', 'Team members', Users],
