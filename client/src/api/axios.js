@@ -45,5 +45,11 @@ api.interceptors.response.use(
   },
 );
 
-export const errorMessage = (error) =>
-  error.response?.data?.message || 'Something went wrong. Please try again.';
+export const errorMessage = (error) => {
+  if (error.response?.data?.message) return error.response.data.message;
+  if (!error.response || [502, 503, 504].includes(error.response.status) ||
+      (error.response.status === 500 && !error.response.data)) {
+    return 'Unable to reach the server. Please try again shortly.';
+  }
+  return 'Something went wrong. Please try again.';
+};

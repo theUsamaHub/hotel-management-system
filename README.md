@@ -259,6 +259,17 @@ the critical findings. Recheck advisories when updating the development toolchai
   at least 32 characters. Values are deliberately omitted from diagnostics.
 - **Database connection failed:** check Atlas credentials, network allowlist, database
   name, and DNS/connectivity. Seeding errors also omit connection values.
+- **Vite proxy `ECONNREFUSED` on login:** first check the server terminal. The API
+  only starts listening after database and index initialization succeed. Startup
+  diagnostics identify the failing stage without printing credentials or records.
+  After correcting `server/.env`, restart `npm run dev` and check `/api/health`.
+- **Atlas DNS TXT lookup timeout:** a `mongodb+srv` URI requires both SRV and TXT
+  DNS lookups. If TXT queries time out even though the database hosts are reachable,
+  fix the resolver/network or use the current standard connection string supplied
+  by Atlas in the ignored `server/.env`. Preserve TLS, the replica-set name,
+  authentication source, database and all cluster hosts. Do not guess those values
+  or disable certificate verification. Standard host lists may need updating when
+  the cluster topology changes; prefer SRV once the resolver is working again.
 - **Origin not allowed:** open `http://localhost:5173`, or deliberately update
   `CLIENT_URL` to match the browser origin and restart the API.
 - **Port occupied:** stop the existing process or change API `PORT` and the Vite proxy
