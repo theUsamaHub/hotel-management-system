@@ -13,11 +13,11 @@ import Billing from './Billing.jsx';
 import GuestServices from './GuestServices.jsx';
 import Feedback from './Feedback.jsx';
 
-function HotelWorkspace({ hotel, role }) {
+function HotelWorkspace({ hotel, role, initialTab }) {
   const isGuest = role === 'user';
   const canBook = ['admin', 'manager', 'receptionist', 'user'].includes(role);
   const canManage = ['admin', 'manager'].includes(role);
-  const [tab, setTab] = useState(isGuest ? 'search' : 'rooms');
+  const [tab, setTab] = useState(initialTab || (isGuest ? 'search' : 'rooms'));
   const [editing, setEditing] = useState(null);
   const tabs = [
     ...(!isGuest ? [['rooms', 'Rooms']] : []),
@@ -108,7 +108,7 @@ function HotelWorkspace({ hotel, role }) {
     </>
   );
 }
-export default function HmsOperations() {
+export default function HmsOperations({ initialTab }) {
   const { user } = useAuth();
   const [selected, setSelected] = useState('');
   const hotels = useQuery({
@@ -121,7 +121,17 @@ export default function HmsOperations() {
       <div className="page-heading">
         <div>
           <p className="eyebrow">LuxuryStay Hospitality</p>
-          <h1>{user.role === 'user' ? 'Plan your stay' : 'Hotel operations'}</h1>
+          <h1>
+            {user.role === 'user'
+              ? {
+                  reservations: 'My reservations',
+                  stays: 'My stays',
+                  services: 'Guest services',
+                  billing: 'My invoices',
+                  feedback: 'My feedback',
+                }[initialTab] || 'Plan your stay'
+              : 'Hotel operations'}
+          </h1>
           <p>Reservations, guest stays and daily hotel operations.</p>
         </div>
       </div>
@@ -141,7 +151,24 @@ export default function HmsOperations() {
                   ])}
                 />
               </section>
-              <HotelWorkspace key={selectedHotel._id} hotel={selectedHotel._id} role={user.role} />
+              <section className="hotel-contact card">
+                <strong>{selectedHotel.name}</strong>
+                <p>
+                  {selectedHotel.address} - {selectedHotel.city}
+                </p>
+                {selectedHotel.email && (
+                  <p>
+                    Email: <a href={`mailto:${selectedHotel.email}`}>{selectedHotel.email}</a>
+                  </p>
+                )}
+                {selectedHotel.phone && <p>Phone: {selectedHotel.phone}</p>}
+              </section>
+              <HotelWorkspace
+                initialTab={initialTab}
+                key={selectedHotel._id}
+                hotel={selectedHotel._id}
+                role={user.role}
+              />
             </>
           ) : (
             <section className="card empty">

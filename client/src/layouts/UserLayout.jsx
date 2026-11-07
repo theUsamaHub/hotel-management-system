@@ -20,7 +20,7 @@ export default function UserLayout() {
           <Outlet />
         </main>
         <div className="workspace-footer">
-          Make space for what matters.<span>Forma Workspace</span>
+          Make space for what matters.<span>LuxuryStay Hospitality</span>
         </div>
       </div>
     </div>

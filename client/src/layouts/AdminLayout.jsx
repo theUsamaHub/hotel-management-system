@@ -45,7 +45,7 @@ export default function AdminLayout() {
           <Outlet />
         </main>
         <div className="workspace-footer">
-          A little structure goes a long way.<span>Forma Workspace</span>
+          A little structure goes a long way.<span>LuxuryStay Hospitality</span>
         </div>
       </div>
     </div>

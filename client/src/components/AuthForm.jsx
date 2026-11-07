@@ -72,10 +72,14 @@ export default function AuthForm({ mode }) {
           </span>
           <h2>{isRegister ? 'Create your account' : 'Welcome back.'}</h2>
           {!isRegister && location.state?.accountNotice === 'password-reset' && (
-            <p className="recovery-notice" role="status">Password reset successfully. Sign in with your new password.</p>
+            <p className="recovery-notice" role="status">
+              Password reset successfully. Sign in with your new password.
+            </p>
           )}
           {!isRegister && location.state?.accountNotice === 'email-changed' && (
-            <p className="recovery-notice" role="status">Email updated. Sign in with your new email address.</p>
+            <p className="recovery-notice" role="status">
+              Email updated. Sign in with your new email address.
+            </p>
           )}
           <p className="muted">
             {isRegister
@@ -118,7 +122,11 @@ export default function AuthForm({ mode }) {
               <ArrowRight size={16} />
             </button>
           </form>
-          {!isRegister && <p><Link to="/forgot-password">Forgot password?</Link></p>}
+          {!isRegister && (
+            <p>
+              <Link to="/forgot-password">Forgot password?</Link>
+            </p>
+          )}
           <p className="auth-switch">
             {isRegister ? 'Already have an account?' : 'New around here?'}{' '}
             <Link to={isRegister ? '/login' : '/register'}>

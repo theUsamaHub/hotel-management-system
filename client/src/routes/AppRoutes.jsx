@@ -1,3 +1,4 @@
+import GuestPage from '../pages/public/GuestPage.jsx';
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import PublicLayout from '../layouts/PublicLayout.jsx';
@@ -31,6 +32,9 @@ export default function AppRoutes() {
       <Routes>
         <Route element={<PublicLayout />}>
           <Route index element={<Home />} />
+          {['stays', 'about', 'services', 'help', 'contact'].map((page) => (
+            <Route key={page} path={page} element={<GuestPage page={page} />} />
+          ))}
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="forgot-password" element={<AccountLink key="forgot" mode="forgot" />} />
@@ -55,12 +59,31 @@ export default function AppRoutes() {
               <Route path="*" element={<NotFound />} />
             </Route>
           </Route>
-          <Route element={<RoleRoute role={['user', 'manager', 'receptionist', 'housekeeping', 'maintenance']} />}>
+          <Route
+            element={
+              <RoleRoute
+                role={['user', 'manager', 'receptionist', 'housekeeping', 'maintenance']}
+              />
+            }
+          >
             <Route path="user" element={<UserLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<UserDashboard />} />
               <Route path="operations" element={<HmsOperations />} />
-              <Route element={<RoleRoute role={['manager', 'receptionist', 'housekeeping', 'maintenance']} />}>
+              <Route element={<RoleRoute role="user" />}>
+                {['reservations', 'stays', 'services', 'billing', 'feedback'].map((tab) => (
+                  <Route
+                    key={tab}
+                    path={tab}
+                    element={<HmsOperations key={tab} initialTab={tab} />}
+                  />
+                ))}
+              </Route>
+              <Route
+                element={
+                  <RoleRoute role={['manager', 'receptionist', 'housekeeping', 'maintenance']} />
+                }
+              >
                 <Route path="hotels" element={<HotelManagement key="hotels" />} />
               </Route>
               <Route element={<RoleRoute role="manager" />}>
