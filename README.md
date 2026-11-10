@@ -74,6 +74,8 @@ A completed rerun makes no changes. An incomplete run stops for inspection inste
 
 ## Commands and tests
 
+Admin overview charts, metric definitions and filters: [admin dashboard guide](docs/HMS-ADMIN-DASHBOARD.md).
+
 | Command from root | Purpose |
 | --- | --- |
 | `npm run install:all` | Install both workspaces and root tooling |
