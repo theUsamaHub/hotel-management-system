@@ -16,11 +16,14 @@ import validate from '../middleware/validate.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { listAudit } from '../controllers/account.js';
 import { auditSchema } from '../validators/account.js';
+import { dashboardSchema } from '../validators/dashboard.js';
+import { adminDashboard } from '../controllers/dashboard.js';
 
 const router = Router();
 router.use('/auth', authRoutes);
 router.use('/account', accountRoutes);
 router.get('/audit', protect, authorize('admin'), validate(auditSchema), asyncHandler(listAudit));
+router.get('/admin/dashboard', protect, authorize('admin'), validate(dashboardSchema), asyncHandler(adminDashboard));
 router.use('/users', userRoutes);
 router.use('/hotels', hotelRoutes);
 router.use('/staff', staffRoutes);
