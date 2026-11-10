@@ -17,23 +17,13 @@ export function GuestHero({ eyebrow, title, description, children }) {
         <p className="guest-intro">{description}</p>
         {children}
       </div>
-      <div
-        className="stay-visual"
-        role="img"
-        aria-label="Architectural illustration of a tranquil hotel courtyard"
-      >
-        <div className="stay-sun" />
-        <div className="stay-building">
-          <i />
-          <i />
-          <i />
-          <i />
-          <i />
-          <i />
-        </div>
-        <div className="stay-pool" />
-        <span>A little space. A different pace.</span>
-      </div>
+      <figure className="guest-photo">
+        <img
+          src="/images/coastal-retreat.png"
+          alt="Illustrative coastal hotel terrace above a blue sea"
+        />
+        <figcaption>A little space. A different pace. · Illustrative artwork</figcaption>
+      </figure>
     </section>
   );
 }
@@ -52,16 +42,60 @@ export function GuestCTA() {
   );
 }
 export const features = [
-  [BedDouble, 'Find your space', 'Compare available rooms, capacity and prices for your dates.'],
+  [
+    BedDouble,
+    'Room availability',
+    'Select a hotel, arrival and departure dates, and guest count. Compare available rooms, capacity, nightly prices and currency.',
+  ],
+  [
+    CalendarDays,
+    'Your guest profile',
+    'Save your name, email, phone and preferences for each hotel before making a reservation.',
+  ],
+  [
+    CalendarDays,
+    'Booking management',
+    'Track pending and confirmed reservations, review saved terms, and modify or cancel eligible bookings. Reception confirms your request.',
+  ],
   [
     Coffee,
-    'Make it your stay',
-    'Explore the services offered by your hotel and request them from your account.',
+    'Services during your stay',
+    'Choose from your hotel’s service catalog, enter quantity and notes, and track progress. Completed services appear on your bill.',
+  ],
+  [
+    Heart,
+    'Room issue reporting',
+    'Report a problem for your active stay and follow its progress while the hotel team arranges repairs.',
   ],
   [
     ReceiptText,
-    'Keep everything together',
-    'Review your reservations, itemized bills and recorded payments in one place.',
+    'Bills, payments & invoices',
+    'Review itemized room and service charges, recorded external payments and the remaining balance. Access your final invoice after checkout.',
+  ],
+  [
+    BedDouble,
+    'Stay details',
+    'See your current and previous stays. Reception records arrival, key handling and departure so your stay history stays together.',
+  ],
+  [
+    CalendarDays,
+    'Updates & hotel policies',
+    'Read your in-app notifications and hotel rules. Booking terms are saved with your reservation for reference.',
+  ],
+  [
+    Heart,
+    'Post-stay feedback',
+    'After checkout, leave a rating and comment for your completed stay. Your hotel’s management can review your feedback.',
+  ],
+  [
+    MapPin,
+    'Hotel contact details',
+    'Select a property in your account to find its address and contact details. Speak to reception about arrival arrangements.',
+  ],
+  [
+    ReceiptText,
+    'A secure personal account',
+    'Manage your profile, password, email verification and signed-in sessions. Your bookings and bills are visible only to you and authorized staff.',
   ],
 ];
 export function FeatureGrid() {
@@ -79,6 +113,11 @@ export function FeatureGrid() {
 }
 export default function GuestPage({ page }) {
   const content = {
+    features: [
+      'Your guest account',
+      'Every detail. One place.',
+      'Discover the tools that help you plan, manage and remember your stay. These are the features available in LuxuryStay today.',
+    ],
     stays: [
       'Rooms & stays',
       'Find somewhere to slow down.',
@@ -125,8 +164,8 @@ export default function GuestPage({ page }) {
             <h2>Your dates. Your space. Your choice.</h2>
             <FeatureGrid />
             <p className="muted">
-              Room categories, amenities, rates and availability vary by property. Sign in to view
-              current hotel inventory and booking terms.
+              Room categories, rates and availability vary by property. Sign in to view current
+              hotel inventory and booking terms.
             </p>
           </section>
           <section className="guest-section guest-split">
@@ -136,8 +175,8 @@ export default function GuestPage({ page }) {
               everything in one place.
             </h2>
             <ol className="guest-steps">
-              <li>Select your hotel and travel dates.</li>
-              <li>Choose an available room and review its policy.</li>
+              <li>Sign in, select a hotel and complete My guest profile.</li>
+              <li>Search your travel dates and guest count; choose an available room.</li>
               <li>Submit your reservation and follow its confirmation.</li>
             </ol>
           </section>
@@ -168,6 +207,18 @@ export default function GuestPage({ page }) {
           </section>
           <FeatureGrid />
         </>
+      )}
+      {page === 'features' && (
+        <section className="guest-section">
+          <p className="eyebrow">From first plans to final farewell</p>
+          <h2>Everything your account can do.</h2>
+          <FeatureGrid />
+          <p className="muted">
+            Services depend on the selected hotel. Reception confirms bookings and handles check-in
+            and checkout. Payments are collected externally and recorded by staff; online card
+            charging is not provided.
+          </p>
+        </section>
       )}
       {page === 'services' && (
         <section className="guest-section">
@@ -212,7 +263,7 @@ export default function GuestPage({ page }) {
           {[
             [
               'How do I book?',
-              'Create an account, add your guest profile, choose a hotel and search for available rooms. A submitted reservation is pending until staff confirms it.',
+              'Create an account, choose a hotel, add your guest profile and search for available rooms. A submitted reservation is pending until staff confirms it.',
             ],
             [
               'Can I change or cancel a booking?',

@@ -25,6 +25,7 @@ export default function Navbar() {
           ['/stays', 'Stays'],
           ['/about', 'Our story'],
           ['/services', 'Services'],
+          ['/features', 'Features'],
           ['/help', 'Guest guide'],
           ['/contact', 'Contact'],
         ].map(([path, title]) => (

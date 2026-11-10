@@ -11,3 +11,6 @@ dist/
 Thumbs.db
 server/uploads/
 **/mail-outbox/
+
+# Generated local demonstration account credentials
+server/demo-access.json

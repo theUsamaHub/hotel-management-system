@@ -47,3 +47,22 @@ test('guest guide explains real booking and payment rules', () => {
     '/user/operations',
   );
 });
+
+test('feature directory describes actual guest capabilities and links to booking', () => {
+  render(
+    <MemoryRouter>
+      <GuestPage page="features" />
+    </MemoryRouter>,
+  );
+  for (const name of [
+    'Room availability',
+    'Your guest profile',
+    'Booking management',
+    'Room issue reporting',
+    'Bills, payments & invoices',
+    'Post-stay feedback',
+  ]) {
+    expect(screen.getByRole('heading', { name })).toBeInTheDocument();
+  }
+  expect(screen.getByText(/online card charging is not provided/)).toBeInTheDocument();
+});

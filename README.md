@@ -23,7 +23,7 @@ npm run install:all
 
 1. Copy `server/.env.example` to `server/.env` and fill in the values below.
 2. Optionally copy `client/.env.example` to `client/.env`; development defaults work without it.
-3. Set `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `server/.env`, then run `npm run bootstrap:admin`. This adds an admin without deleting existing data. The legacy `seed` command replaces users and categories; use it only with a disposable database.
+3. Set `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `server/.env`, then run `npm run bootstrap:admin`. This adds an admin without deleting existing data. For a full non-destructive hotel demo, run `npm run seed:demo`; see the demo guide below.
 4. Run `npm run dev` to start both applications.
 5. Open **http://localhost:5173**. The API listens on **http://localhost:5000**.
 
@@ -64,20 +64,13 @@ Restart the API after changing environment variables.
 
 ## Seed data and demo accounts
 
-`npm run seed` **deletes every user and category in the configured database**, then
-creates these accounts and ten categories owned by the admin. Use a dedicated
-development database. `npm run seed:destroy` only clears users and categories.
-Both commands refuse to run with `NODE_ENV=production`.
+`npm run seed:demo` (also `npm run seed`) adds **LuxuryStay Demo House** without clearing existing data. It requires a non-production environment, `MAIL_MODE=file`, and an Atlas/replica-set database.
 
-| Role | Email | Demo password | Dashboard |
-| --- | --- | --- | --- |
-| Admin | admin@example.com | Admin@123 | `/admin/dashboard` |
-| User | user1@example.com | User@123 | `/user/dashboard` |
-| User | user2@example.com | User@123 | `/user/dashboard` |
+It creates six role accounts, three room types, nine rooms, three services, pending/confirmed bookings, an active stay with a deposit, a completed stay with an invoice and feedback, and assigned cleaning/maintenance work. All addresses use the reserved `.example` domain. This is clearly marked training data, not real guests or real testimonials.
 
-These credentials are public demo fixtures. Do not use them for production accounts.
-The seed creates Electronics, Fashion, Books, Home, Sports, Toys, Beauty, Grocery,
-Automotive, and Health. It prints account credentials after successful creation.
+Account emails are `demo.admin@luxurystay.example`, `demo.manager@luxurystay.example`, `demo.receptionist@luxurystay.example`, `demo.housekeeping@luxurystay.example`, `demo.maintenance@luxurystay.example`, and `demo.user@luxurystay.example`. The generated password is saved only in ignored `server/demo-access.json`; it is not printed or committed.
+
+A completed rerun makes no changes. An incomplete run stops for inspection instead of duplicating data. See [the demo walkthrough](docs/HMS-DEMO-AND-EXPERIENCE.md). The old `seed:destroy` command remains destructive to users/categories and must never be used to reset this hotel dataset.
 
 ## Commands and tests
 
@@ -85,7 +78,7 @@ Automotive, and Health. It prints account credentials after successful creation.
 | --- | --- |
 | `npm run install:all` | Install both workspaces and root tooling |
 | `npm run dev` | Run Express and Vite together; Ctrl+C stops both |
-| `npm run seed` / `npm run seed:destroy` | Reset demo data / clear data |
+| `npm run seed:demo` / `npm run seed` | Add the non-destructive hotel demo |
 | `npm test` | Run backend and frontend test suites |
 | `npm run test:coverage` | Run both coverage reports |
 | `npm run lint` | Lint both applications |

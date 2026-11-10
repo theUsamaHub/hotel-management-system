@@ -18,6 +18,7 @@ export default function PublicLayout() {
           <Link to="/stays">Rooms & stays</Link>
           <Link to="/about">Our story</Link>
           <Link to="/services">Guest services</Link>
+          <Link to="/features">All guest features</Link>
         </nav>
         <nav aria-label="Guest support">
           <strong>Your visit</strong>

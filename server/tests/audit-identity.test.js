@@ -1,0 +1,24 @@
+import { test, expect } from '@jest/globals';
+import { session } from './helpers.js';
+import User from '../src/models/User.js';
+import AuditEvent from '../src/models/AuditEvent.js';
+import { audit } from '../src/utils/audit.js';
+test('audit retains identity after rename/deletion and filters every role without leaking secrets', async () => {
+  const admin = await session();
+  const worker = await User.create({ name: 'Original Worker', email: 'worker@example.com', role: 'maintenance', password: 'Password123!' });
+  await audit({ user: worker }, 'maintenance.start', 'repair-1', { reason: 'Inspection' });
+  await User.findByIdAndDelete(worker._id);
+  const response = await admin.agent.get('/api/audit').query({ role: 'maintenance', search: String(worker._id) });
+  expect(response.status).toBe(200);
+  expect(response.body.events).toHaveLength(1);
+  expect(response.body.events[0]).toMatchObject({ actor: null, actorId: String(worker._id), actorSnapshot: { name: 'Original Worker', role: 'maintenance', id: String(worker._id) } });
+  expect(JSON.stringify(response.body)).not.toContain('Password123!');
+  expect(response.body.actions).toContain('maintenance.start');
+  const own = await admin.agent.get('/api/audit').query({ role: 'admin' });
+  expect(own.body.events.some((e) => e.action === 'auth.login' && e.actorSnapshot.id === String(admin.user._id))).toBe(true);
+  const guest = await session('user');
+  expect((await guest.agent.get('/api/audit')).status).toBe(403);
+  await AuditEvent.create({ actor: worker._id, action: 'legacy.action', target: 'legacy' });
+  const legacy = await admin.agent.get('/api/audit').query({ action: 'legacy.action' });
+  expect(legacy.body.events[0].actorId).toBe(String(worker._id));
+});
