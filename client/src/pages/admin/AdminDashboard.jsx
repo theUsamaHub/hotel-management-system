@@ -89,7 +89,7 @@ export default function AdminDashboard() {
     <div className="analytics-dashboard">
       <div className="page-heading">
         <div>
-          <p className="eyebrow">LuxuryStay / Performance overview</p>
+          <p className="eyebrow">Luxury Star Hotel / Performance overview</p>
           <h1>Hotel dashboard</h1>
           <p>Your properties, performance and priorities in one place.</p>
         </div>

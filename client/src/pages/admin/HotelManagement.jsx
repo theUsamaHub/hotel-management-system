@@ -101,7 +101,7 @@ export default function HotelManagement({ staff = false }) {
     <>
       <div className="page-heading">
         <div>
-          <p className="eyebrow">LuxuryStay Hospitality</p>
+          <p className="eyebrow">Luxury Star Hotel</p>
           <h1>{title}</h1>
           <p>
             {staff

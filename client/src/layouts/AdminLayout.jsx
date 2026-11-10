@@ -29,7 +29,7 @@ export default function AdminLayout() {
           </span>
           <div>
             <span className="status-dot" />
-            <span className="connection-label">All systems connected</span>
+            <span className="connection-label">Administration</span>
             <span className="avatar">{user.name.slice(0, 1)}</span>
             <button
               className="button secondary admin-signout"
@@ -45,7 +45,7 @@ export default function AdminLayout() {
           <Outlet />
         </main>
         <div className="workspace-footer">
-          A little structure goes a long way.<span>LuxuryStay Hospitality</span>
+          Thoughtful service. Exceptional stays.<span>Luxury Star Hotel</span>
         </div>
       </div>
     </div>

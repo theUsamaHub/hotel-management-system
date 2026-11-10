@@ -13,14 +13,14 @@ export default function UserLayout() {
           </span>
           <div>
             <span className="status-dot" />
-            Connected <span className="avatar">{user.name.slice(0, 1)}</span>
+            Hotel account <span className="avatar">{user.name.slice(0, 1)}</span>
           </div>
         </header>
         <main className="workspace-content">
           <Outlet />
         </main>
         <div className="workspace-footer">
-          Make space for what matters.<span>LuxuryStay Hospitality</span>
+          Make space for what matters.<span>Luxury Star Hotel</span>
         </div>
       </div>
     </div>

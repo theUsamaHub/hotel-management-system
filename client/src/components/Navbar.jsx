@@ -1,15 +1,14 @@
+import Brand from './Brand.jsx';
+import GuestLink from './GuestLink.jsx';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Layers3, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   return (
     <header className="navbar guest-navbar">
       <Link className="brand" to="/">
-        <span className="brand-mark">
-          <Layers3 size={22} />
-        </span>
-        LuxuryStay
+        <Brand />
       </Link>
       <button
         className="icon-button guest-nav-toggle"
@@ -36,9 +35,9 @@ export default function Navbar() {
         <Link to="/login" onClick={() => setOpen(false)}>
           Sign in
         </Link>
-        <Link className="button" to="/user/operations" onClick={() => setOpen(false)}>
+        <GuestLink className="button" to="/user/operations" onClick={() => setOpen(false)}>
           Book a stay
-        </Link>
+        </GuestLink>
       </nav>
     </header>
   );
