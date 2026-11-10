@@ -14,12 +14,13 @@
     "bootstrap:admin": "npm run bootstrap:admin --workspace server",
     "dev": "concurrently -k -n server,client \"npm run dev --workspace server\" \"npm run dev --workspace client\"",
     "install:all": "npm install",
-    "seed": "npm run seed --workspace server",
+    "seed": "npm run seed:demo --workspace server",
     "seed:destroy": "npm run seed:destroy --workspace server",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "test:coverage": "npm run test:coverage --workspaces --if-present",
-    "build": "npm run build --workspace client"
+    "build": "npm run build --workspace client",
+    "seed:demo": "npm run seed:demo --workspace server"
   },
   "devDependencies": {
     "concurrently": "^9.2.0"

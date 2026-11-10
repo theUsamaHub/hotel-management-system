@@ -32,7 +32,7 @@ export default function AppRoutes() {
       <Routes>
         <Route element={<PublicLayout />}>
           <Route index element={<Home />} />
-          {['stays', 'about', 'services', 'help', 'contact'].map((page) => (
+          {['stays', 'about', 'services', 'features', 'help', 'contact'].map((page) => (
             <Route key={page} path={page} element={<GuestPage page={page} />} />
           ))}
           <Route path="login" element={<Login />} />

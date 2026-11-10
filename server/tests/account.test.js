@@ -62,7 +62,7 @@ test('verification is one-use, does not expose token fields, and sends welcome e
   expect((await request(app).post('/api/auth/verify-email').send({ token })).status).toBe(200);
   expect((await User.findOne({ email: account.email })).emailVerified).toBe(true);
   expect((await request(app).post('/api/auth/verify-email').send({ token })).status).toBe(400);
-  expect((await EmailJob.find().select('+payload')).map((j) => decodeEmail(j.payload).subject)).toContain('Welcome to Forma');
+  expect((await EmailJob.find().select('+payload')).map((j) => decodeEmail(j.payload).subject)).toContain('Welcome to LuxuryStay');
 });
 
 test('email changes require password, wait for verification, and revoke sessions on confirmation', async () => {

@@ -13,7 +13,12 @@ import Login from '../pages/public/Login.jsx';
 
 function LocationIndicator() {
   const location = useLocation();
-  return <span hidden data-testid="location">{location.pathname}{location.hash}</span>;
+  return (
+    <span hidden data-testid="location">
+      {location.pathname}
+      {location.hash}
+    </span>
+  );
 }
 
 function renderAccount(component, path = '/', context = {}) {
@@ -24,7 +29,10 @@ function renderAccount(component, path = '/', context = {}) {
     >
       <AuthContext.Provider value={auth}>
         <MemoryRouter initialEntries={[path]}>
-          <Routes><Route path="/login" element={<Login />} /><Route path="*" element={component} /></Routes>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={component} />
+          </Routes>
           <LocationIndicator />
         </MemoryRouter>
       </AuthContext.Provider>
@@ -60,19 +68,24 @@ test('forgot password submits email and shows the generic confirmation', async (
 
 test('resend reuses the submitted email, handles failure, and restarts its cooldown on success', async () => {
   const bodies = [];
-  server.use(http.post('*/api/auth/forgot-password', async ({ request }) => {
-    bodies.push(await request.json());
-    return bodies.length === 2
-      ? HttpResponse.json({ message: 'Please try again' }, { status: 503 })
-      : HttpResponse.json({ message: 'If eligible, check your inbox.' });
-  }));
+  server.use(
+    http.post('*/api/auth/forgot-password', async ({ request }) => {
+      bodies.push(await request.json());
+      return bodies.length === 2
+        ? HttpResponse.json({ message: 'Please try again' }, { status: 503 })
+        : HttpResponse.json({ message: 'If eligible, check your inbox.' });
+    }),
+  );
   renderAccount(<AccountLink mode="forgot" />);
   const user = userEvent.setup();
   await user.type(screen.getByLabelText('Email address'), account.email);
   await user.click(screen.getByRole('button', { name: 'Send reset link' }));
   expect(await screen.findByRole('button', { name: /Resend reset link in/ })).toBeDisabled();
   vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 61000);
-  await waitFor(() => expect(screen.getByRole('button', { name: 'Resend reset link' })).toBeEnabled(), { timeout: 2500 });
+  await waitFor(
+    () => expect(screen.getByRole('button', { name: 'Resend reset link' })).toBeEnabled(),
+    { timeout: 2500 },
+  );
   await user.click(screen.getByRole('button', { name: 'Resend reset link' }));
   expect(await screen.findByRole('alert')).toHaveTextContent('Please try again');
   await user.click(screen.getByRole('button', { name: 'Resend reset link' }));
@@ -110,7 +123,12 @@ test('reset requires matching passwords and sends the fragment token only after 
 
 test('password visibility controls toggle independently without submitting the reset form', async () => {
   let requests = 0;
-  server.use(http.post('*/api/auth/reset-password', () => { requests++; return HttpResponse.json({}); }));
+  server.use(
+    http.post('*/api/auth/reset-password', () => {
+      requests++;
+      return HttpResponse.json({});
+    }),
+  );
   renderAccount(<AccountLink mode="reset" />, `/reset-password#token=${token}`);
   const user = userEvent.setup();
   const password = screen.getByLabelText('New password');
@@ -196,11 +214,13 @@ test('activity log filters admin events and renders returned records', async () 
     http.get('*/api/audit', ({ request }) => {
       selected = new URL(request.url).searchParams.get('action');
       return HttpResponse.json({
+        actions: ['category.delete'],
         events: [
           {
             _id: '1',
             action: 'category.delete',
-            actor: { name: 'Admin One' },
+            actor: { name: 'Admin One', _id: 'actor-123', role: 'admin' },
+            actorSnapshot: { name: 'Admin One', id: 'actor-123', role: 'admin' },
             target: '123',
             createdAt: '2026-10-01',
           },
@@ -211,6 +231,8 @@ test('activity log filters admin events and renders returned records', async () 
   );
   renderAccount(<ActivityLog />);
   expect(await screen.findByText('Admin One')).toBeVisible();
+  expect(screen.getByText('actor-123')).toBeVisible();
+  expect(screen.getByRole('columnheader', { name: 'Role at action' })).toBeVisible();
   await userEvent.selectOptions(screen.getByLabelText('Filter activity'), 'category.delete');
   await waitFor(() => expect(selected).toBe('category.delete'));
   expect(within(screen.getByRole('table')).getByText('category.delete')).toBeVisible();

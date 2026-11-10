@@ -1762,3 +1762,46 @@ input,select,textarea,.button.secondary,.icon-button { background:var(--surface)
 @media(max-width:1050px) { .guest-navbar { flex-wrap:wrap; } .guest-navbar nav { gap:16px; font-size:13px; } .guest-hero { gap:32px; } .guest-split { gap:40px; } .stay-visual { height:440px; } }
 @media(max-width:760px) { .guest-navbar { padding:20px; min-height:76px; justify-content:space-between; } .guest-nav-toggle { display:inline-grid; } .guest-navbar nav { display:none; width:100%; } .guest-navbar nav.is-open { display:flex; flex-direction:column; align-items:stretch; gap:4px; } .guest-navbar nav a { padding:12px; } .guest-site { padding:12px 20px 48px; } .guest-hero { grid-template-columns:1fr; padding:24px 0 32px; gap:32px; } .guest-hero h1 { font-size:42px; } .stay-visual { height:380px; border-radius:80px 80px 24px 24px; } .stay-building { top:80px; height:225px; } .guest-feature-grid,.guest-split { grid-template-columns:1fr; gap:20px; } .guest-section { padding:36px 0; } .guest-section-heading,.guest-cta { flex-direction:column; align-items:flex-start; } .guest-cta { padding:28px; } .public-shell .guest-footer { grid-template-columns:1fr 1fr; padding:36px 20px 90px; gap:32px; } .guest-footer > div { grid-column:1/-1; } .guest-account-hero { padding:28px; } }
 @media print { :root,body { color-scheme:light; background:white; color:black; } .theme-toggle { display:none !important; } }
+
+/* Coastal editorial guest experience: scoped to the public shell. */
+.public-shell { --ink:#142c3a; --ink-muted:#40535c; --muted:#526269; --surface:#faf6ef; --wash:#eee7dc; --line:#18344520; --accent:#17485c; background:#f5eee4; color:var(--ink); }
+:root.dark .public-shell { --ink:#f2ebdf; --ink-muted:#cbd2d0; --muted:#b2c0c2; --surface:#172a31; --wash:#20343b; --line:#d5e4e529; --accent:#b5dbe2; background:#102229; }
+.public-shell h1,.public-shell h2,.public-shell h3 { font-family:Georgia,'Times New Roman',serif; font-weight:400; letter-spacing:-.035em; }
+.public-shell .button { border-radius:30px; background:#123747; color:#fff; padding:14px 24px; border:1px solid #123747; }
+.public-shell .button.secondary { background:transparent; color:var(--ink); border-color:var(--line); }
+.public-shell .brand { letter-spacing:.12em; font-size:20px; font-weight:500; }
+.public-shell .brand-mark { display:none; }
+.public-shell .guest-navbar { max-width:none; padding:24px 5%; margin:0; position:relative; z-index:5; background:var(--surface); }
+.public-shell:has(.editorial-home) .guest-navbar { position:absolute; top:0; left:0; width:100%; background:transparent; color:#142c3a; }
+.public-shell:has(.editorial-home) .guest-navbar a:not(.button) { color:#142c3a; }
+.guest-navbar nav { gap:19px; font-size:13px; }
+.destination-hero { min-height:790px; height:min(960px,95vh); position:relative; background:linear-gradient(90deg,#d0e7efb0 0%,#d0e7ef38 40%,transparent 65%),url('/images/coastal-retreat.png') center 58%/cover; color:#102f40; padding:160px 6% 75px; display:flex; flex-direction:column; justify-content:space-between; }
+.destination-copy { max-width:570px; }
+.destination-copy h1 { font-size:clamp(64px,6.9vw,108px); line-height:.97; margin:28px 0; }
+.destination-copy h1 em { font-weight:400; }
+.destination-copy > p:not(.eyebrow) { font-size:18px; line-height:1.65; margin:24px 0; color:#18394a; }
+.destination-copy .eyebrow { color:#163c4e; letter-spacing:.25em; line-height:1.9; font-size:10px; }
+.hero-bottom { display:flex; align-items:center; gap:30px; font-size:10px; letter-spacing:.22em; color:#102f40; }
+.hero-bottom a { width:42px; height:42px; border:1px solid #17384c66; border-radius:50%; display:grid; place-items:center; }
+.destination-title { text-align:center; padding:50px 20px 12px; }
+.destination-title > span { font-size:clamp(26px,5vw,72px); letter-spacing:.33em; padding-left:.33em; font-weight:300; }
+.destination-title p { font-size:10px; letter-spacing:.3em; margin:16px 0; }
+.destination-title small { color:var(--muted); font-size:11px; }
+.editorial-discovery { display:grid; grid-template-columns:1fr 1.1fr .85fr; gap:36px; padding:48px 0 75px; align-items:center; }
+.editorial-discovery h2 { font-size:clamp(36px,4vw,60px); line-height:1.02; margin:20px 0; }
+.editorial-discovery p { color:var(--muted); font-size:15px; line-height:1.8; }
+.discovery-image { margin:0; align-self:start; }.discovery-image.secondary { padding-top:60px; }
+.discovery-image img { width:100%; height:390px; object-fit:cover; border-radius:100px 100px 12px 12px; }.discovery-image.secondary img { height:300px; object-position:75% center; border-radius:12px; }
+.discovery-image figcaption { margin-top:20px; font-size:10px; letter-spacing:.15em; }.discovery-image figcaption span { display:block; font-family:Georgia,serif; font-style:italic; font-size:25px; letter-spacing:0; margin-top:10px; }
+.editorial-link { display:inline-flex; align-items:center; gap:20px; border-bottom:1px solid var(--ink); padding:8px 0; font-size:14px; }
+.journey-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:36px; }.journey-grid article { padding:28px 0; border-top:1px solid var(--line); }.journey-number { font-size:12px; color:var(--muted); }.journey-grid h3 { font-size:30px; margin:24px 0 16px; }.journey-grid p { font-size:15px; color:var(--muted); line-height:1.8; }
+.editorial-note { border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.public-shell .guest-hero { padding-top:50px; gap:65px; }.public-shell .guest-hero h1 { font-size:clamp(45px,5vw,76px); line-height:1.02; }
+.guest-photo { margin:0; position:relative; }.guest-photo img { width:100%; height:500px; border-radius:120px 120px 18px 18px; object-fit:cover; object-position:75% center; }.guest-photo figcaption { color:var(--muted); text-align:center; font-size:11px; padding:12px; }
+.public-shell .guest-feature-grid .card { background:var(--surface); border:1px solid var(--line); border-radius:24px; box-shadow:none; }.public-shell .guest-feature-grid h3 { font-size:28px; }
+.public-shell .guest-cta { border-radius:28px; }.public-shell .guest-footer { margin:auto; background:transparent; }
+.audit-id { display:block; font-family:monospace; font-size:11px; margin-top:6px; overflow-wrap:anywhere; }.audit-target { font-family:monospace; font-size:12px; }.audit-details { white-space:pre-wrap; overflow-wrap:anywhere; max-width:420px; max-height:260px; overflow:auto; font-size:12px; }.toolbar { flex-wrap:wrap; gap:16px; }
+@media(max-width:1100px) { .public-shell .guest-navbar { padding:20px 4%; }.guest-navbar nav { gap:12px; }.destination-hero { padding-top:170px; }.editorial-discovery { gap:24px; } }
+@media(max-width:760px) { .public-shell .guest-navbar { padding:18px 20px; }.public-shell:has(.editorial-home) .guest-navbar nav.is-open { background:#faf6ef; border-radius:18px; padding:12px; box-shadow:0 15px 30px #142c3a20; }.destination-hero { min-height:740px; height:auto; padding:130px 24px 40px; background-position:58% center; background-image:linear-gradient(90deg,#c9e3efdd,#c9e3ef88 55%,#c9e3ef10),url('/images/coastal-retreat.png'); }.destination-copy h1 { font-size:66px; }.hero-bottom { margin-top:90px; }.destination-title > span { font-size:27px; letter-spacing:.2em; }.editorial-discovery { grid-template-columns:1fr 1fr; gap:18px; padding:28px 0; }.editorial-discovery > div { grid-column:1/-1; }.discovery-image img { height:270px; border-radius:65px 65px 12px 12px; }.discovery-image.secondary { padding-top:40px; }.discovery-image.secondary img { height:220px; }.discovery-image figcaption span { font-size:21px; }.journey-grid { grid-template-columns:1fr; gap:8px; }.public-shell .guest-hero { gap:24px; padding-top:20px; }.guest-photo img { height:330px; }.public-shell .guest-hero h1 { font-size:46px; } }
+
+@media(min-width:761px) { .public-shell:has(.editorial-home) .guest-navbar nav { background:#faf6efe8; backdrop-filter:blur(12px); border:1px solid #ffffff40; border-radius:40px; padding:7px 8px 7px 22px; } }

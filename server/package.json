@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "bootstrap:admin": "node src/seed/bootstrap-admin.js",
-    "seed": "node src/seed/seed.js",
+    "seed": "node src/seed/demo.js",
     "seed:destroy": "node src/seed/seed.js --destroy",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
     "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
     "test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --runInBand --coverage",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "seed:demo": "node src/seed/demo.js"
   },
   "devDependencies": {
     "@eslint/js": "8.57.1",

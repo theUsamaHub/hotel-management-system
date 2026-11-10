@@ -1,90 +1,157 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import { GuestHero, GuestCTA, FeatureGrid } from './GuestPage.jsx';
+import { ArrowRight, ArrowDown } from 'lucide-react';
+import { GuestCTA } from './GuestPage.jsx';
 export default function Home() {
   return (
-    <main className="guest-site">
-      <GuestHero
-        eyebrow="Welcome to LuxuryStay"
-        title={
-          <>
-            Stay a little longer.
+    <main className="editorial-home">
+      <section className="destination-hero">
+        <div className="destination-copy">
+          <p className="eyebrow">
+            MORE THAN A ROOM
+            <br />A STAY THAT IS YOURS
+          </p>
+          <h1>
+            A slower pace.
+            <br />A brighter
             <br />
-            Feel a little more at home.
-          </>
-        }
-        description="Space to unwind. Details taken care of. Discover your next stay and keep every part of the journey beautifully simple."
-      >
-        <div className="linear-actions">
-          <Link to="/stays" className="button">
-            Discover your stay <ArrowRight size={16} />
-          </Link>
-          <Link to="/about" className="button secondary">
-            Meet LuxuryStay
+            <em>stay.</em>
+          </h1>
+          <p>
+            Find your room. Make your plans.
+            <br />
+            Let the details fall into place.
+          </p>
+          <Link className="button" to="/user/operations">
+            Plan your stay <ArrowRight size={18} />
           </Link>
         </div>
-        <p className="hero-footnote">Your reservations, services and stay details. Together.</p>
-      </GuestHero>
-      <section className="guest-section">
-        <div className="guest-section-heading">
+        <div className="hero-bottom">
+          <span>DISCOVER · STAY · CONNECT</span>
+          <a href="#experience" aria-label="Explore the guest experience">
+            <ArrowDown />
+          </a>
+        </div>
+      </section>
+      <div className="destination-title">
+        <span>LUXURYSTAY</span>
+        <p>THOUGHTFUL STAYS. CONNECTED HOSPITALITY.</p>
+        <small>Coastal atmosphere artwork · Explore actual availability in your account</small>
+      </div>
+      <div className="guest-site">
+        <section className="editorial-discovery" id="experience">
           <div>
-            <p className="eyebrow">Designed around your visit</p>
+            <p className="eyebrow">THE ART OF A SIMPLE STAY</p>
             <h2>
-              Room for everything
+              More room
               <br />
-              that makes a stay yours.
+              for your time.
+            </h2>
+            <p>
+              From choosing a room to your final invoice, LuxuryStay brings your hotel and your
+              plans together. A personal space for the practical details, so you can enjoy the
+              visit.
+            </p>
+            <Link className="editorial-link" to="/about">
+              Discover LuxuryStay <ArrowRight size={17} />
+            </Link>
+          </div>
+          <figure className="discovery-image">
+            <img
+              src="/images/quiet-suite.png"
+              alt="Illustrative sunlit guest suite with linen furnishings"
+              loading="lazy"
+            />
+            <figcaption>
+              FIND YOUR SPACE <span>A room for your plans</span>
+            </figcaption>
+          </figure>
+          <figure className="discovery-image secondary">
+            <img
+              src="/images/coastal-retreat.png"
+              alt="Illustrative terrace overlooking the coast"
+              loading="lazy"
+            />
+            <figcaption>
+              TAKE YOUR TIME <span>A different pace</span>
+            </figcaption>
+          </figure>
+        </section>
+        <section className="guest-section">
+          <div className="guest-section-heading">
+            <div>
+              <p className="eyebrow">YOUR STAY, FROM START TO FINISH</p>
+              <h2>
+                Less to organise.
+                <br />
+                More to look forward to.
+              </h2>
+            </div>
+            <Link className="editorial-link" to="/features">
+              All guest features <ArrowRight size={17} />
+            </Link>
+          </div>
+          <div className="journey-grid">
+            {[
+              [
+                '01',
+                'Before you arrive',
+                'Create an account, select a hotel and save your guest profile. Search dates and guest count, choose a room and submit your booking for staff confirmation.',
+                '/stays',
+                'Find your room',
+              ],
+              [
+                '02',
+                'While you are here',
+                'Follow your stay, request available hotel services and report room issues. See request progress and keep track of your itemized bill.',
+                '/services',
+                'Explore guest services',
+              ],
+              [
+                '03',
+                'Until next time',
+                'Reception settles your balance and completes checkout. Access your final invoice and leave a rating and comment about your stay.',
+                '/help',
+                'Read the guest guide',
+              ],
+            ].map(([number, title, text, to, label]) => (
+              <article key={number}>
+                <span className="journey-number">{number}</span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+                <Link className="editorial-link" to={to}>
+                  {label}
+                  <ArrowRight size={16} />
+                </Link>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section className="guest-section guest-split editorial-note">
+          <div>
+            <p className="eyebrow">EVERY DETAIL IN ONE ACCOUNT</p>
+            <h2>
+              Your plans.
+              <br />
+              Always close by.
             </h2>
           </div>
-          <Link to="/services">Explore guest services →</Link>
-        </div>
-        <FeatureGrid />
-      </section>
-      <section className="guest-section guest-split">
-        <div>
-          <p className="eyebrow">The LuxuryStay experience</p>
-          <h2>
-            Arrive with plans.
-            <br />
-            Leave with memories.
-          </h2>
-          <p>
-            Whether your visit is a quick pause or a longer escape, keep the practical details
-            simple. Find your room, follow your booking and connect with your hotel through one
-            guest account.
-          </p>
-          <Link className="button secondary" to="/about">
-            Our approach to hospitality
-          </Link>
-        </div>
-        <div className="guest-story card">
-          <span className="eyebrow">A connected guest journey</span>
-          <ol className="guest-steps">
-            <li>
-              <strong>Before you arrive</strong>
-              <p>Explore availability and review your booking terms.</p>
-            </li>
-            <li>
-              <strong>While you are here</strong>
-              <p>Request available services and let the team know what you need.</p>
-            </li>
-            <li>
-              <strong>Until next time</strong>
-              <p>Access your invoice and share your experience.</p>
-            </li>
-          </ol>
-        </div>
-      </section>
-      <section className="guest-section guest-section-heading">
-        <div>
-          <p className="eyebrow">A little reassurance</p>
-          <h2>Questions before you arrive?</h2>
-          <p>Our guest guide explains reservations, services, payments and more.</p>
-        </div>
-        <Link className="button secondary" to="/help">
-          Read the guest guide
-        </Link>
-      </section>
-      <GuestCTA />
+          <div>
+            <p>
+              Manage reservations, read hotel policies, receive in-app updates, review recorded
+              payments and find your hotel’s contact details. Your account follows the whole
+              journey.
+            </p>
+            <p>
+              Bookings are confirmed by the hotel team. Payments are collected externally and
+              recorded by reception; the website does not charge your card online.
+            </p>
+            <Link className="editorial-link" to="/features">
+              See what your account can do <ArrowRight size={17} />
+            </Link>
+          </div>
+        </section>
+        <GuestCTA />
+      </div>
     </main>
   );
 }

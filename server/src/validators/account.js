@@ -12,6 +12,7 @@ export const passwordSchema = z.object({ body: z.object({ currentPassword, passw
 export const emailSchema = z.object({ body: z.object({ currentPassword, email }).strict() });
 export const profileSchema = z.object({ body: z.object({ name: z.string().trim().min(2).max(80) }).strict() });
 export const sessionSchema = z.object({ params: idParams });
-export const auditSchema = z.object({ query: paginationQuery.omit({ search: true }).extend({
+export const auditSchema = z.object({ query: paginationQuery.extend({
   action: z.string().max(80).optional(),
+  role: z.enum(['admin', 'manager', 'receptionist', 'housekeeping', 'maintenance', 'user']).optional(),
 }).strict() });

@@ -1,0 +1,24 @@
+import { test, expect } from '@jest/globals';
+import mongoose from 'mongoose';
+import { seedHotelDemo } from '../src/seed/hotel-demo.js';
+import User from '../src/models/User.js';
+import Room from '../src/models/Room.js';
+import Reservation from '../src/models/Reservation.js';
+import Invoice from '../src/models/Invoice.js';
+import AuditEvent from '../src/models/AuditEvent.js';
+import { session } from './helpers.js';
+process.env.HMS_TRANSACTION_TESTS = '1';
+test('non-destructive demo provides consistent workflow data for every role and refuses duplicate runs', async () => {
+  const { user: original } = await session();
+  const result = await seedHotelDemo('DemoTestPassword123!');
+  expect(result.skipped).toBe(false);
+  expect(await User.exists({ _id: original._id })).toBeTruthy();
+  expect(await Room.countDocuments({ hotel: result.hotel })).toBe(9);
+  expect(await Reservation.distinct('status', { hotel: result.hotel })).toEqual(expect.arrayContaining(['pending', 'confirmed', 'checked_in', 'checked_out']));
+  expect(await Invoice.countDocuments()).toBe(1);
+  expect(await AuditEvent.distinct('actorSnapshot.role')).toEqual(expect.arrayContaining(['admin', 'manager', 'receptionist', 'housekeeping', 'maintenance', 'user']));
+  const count = await AuditEvent.countDocuments();
+  expect((await seedHotelDemo('DemoTestPassword123!')).skipped).toBe(true);
+  expect(await AuditEvent.countDocuments()).toBe(count);
+  await mongoose.connection.collection('demo_seed_runs').deleteMany({});
+});

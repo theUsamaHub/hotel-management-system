@@ -1,3 +1,5 @@
+import { audit } from '../utils/audit.js';
+import escapeRegex from '../utils/escapeRegex.js';
 import { randomBytes } from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
@@ -61,6 +63,7 @@ export async function resetPassword(req, res) {
   if (!user) throw new ApiError(400, 'Invalid or expired link. Request a new one.');
   await Session.deleteMany({ user: user._id });
   clearCookies(res);
+  await audit({ ...req, user }, 'account.password_change', user._id);
   await queueEmail(user.email, 'Your password was changed', 'Your password was reset. All sessions have been signed out. If this was not you, reset your password immediately.');
   res.json({ success: true, message: 'Password reset. Sign in with your new password.' });
 }
@@ -88,8 +91,9 @@ export async function verifyEmail(req, res) {
     clearCookies(res);
     await queueEmail(candidate.email, 'Your email address changed', 'Your account email address was changed. If this was not you, contact your workspace administrator immediately.');
   } else {
-    await queueEmail(user.email, 'Welcome to Forma', 'Your email is verified. Welcome to your workspace!');
+    await queueEmail(user.email, 'Welcome to LuxuryStay', 'Your email is verified. Welcome to your workspace!');
   }
+  await audit({ ...req, user }, changing ? 'account.email_change' : 'account.email_verified', user._id);
   res.json({ success: true, message: changing ? 'Email updated. Sign in with your new address.' : 'Your email address is verified.', signedOut: changing });
 }
 
@@ -108,6 +112,7 @@ export async function changePassword(req, res) {
   if (!result.modifiedCount) throw new ApiError(409, 'Account changed. Sign in and try again.');
   await Session.deleteMany({ user: user._id });
   clearCookies(res);
+  await audit({ ...req, user }, 'account.password_change', user._id);
   await queueEmail(user.email, 'Your password was changed', 'Your password was changed. All devices have been signed out.');
   res.json({ success: true, message: 'Password changed. Sign in again on each device.' });
 }
@@ -116,15 +121,18 @@ export async function changeEmail(req, res) {
   if (user.email === req.body.email) throw new ApiError(400, 'Choose a different email address');
   if (await User.exists({ email: req.body.email })) throw new ApiError(409, 'That email address is unavailable');
   if (!(await requestVerification(user, req.body.email))) throw new ApiError(429, 'Wait one minute before requesting another email');
+  await audit(req, 'account.email_change_requested', req.user._id);
   res.json({ success: true, message: 'Check your new email address to confirm. Your current address stays active until then.' });
 }
 export async function cancelEmailChange(req, res) {
   await User.updateOne({ _id: req.user._id, pendingEmail: { $exists: true } },
     { $unset: { pendingEmail: 1, verificationHash: 1, verificationExpires: 1, verificationSentAt: 1 } });
+  await audit(req, 'account.email_change_cancelled', req.user._id);
   res.json({ success: true, message: 'Pending email change cancelled' });
 }
 export async function updateProfile(req, res) {
   const user = await User.findByIdAndUpdate(req.user._id, { $set: { name: req.body.name } }, { returnDocument: 'after', runValidators: true });
+  await audit({ ...req, user }, 'account.profile_update', user._id);
   res.json({ success: true, user });
 }
 export async function listSessions(req, res) {
@@ -137,10 +145,12 @@ export async function revokeSession(req, res) {
   if (!session) throw new ApiError(404, 'Session not found');
   const signedOut = session.id === req.session.id;
   if (signedOut) clearCookies(res);
+  await audit(req, 'account.session_revoked', req.params.id);
   res.json({ success: true, signedOut });
 }
 export async function revokeOtherSessions(req, res) {
   await Session.deleteMany({ user: req.user._id, _id: { $ne: req.session._id } });
+  await audit(req, 'account.other_sessions_revoked', req.user._id);
   res.json({ success: true, message: 'Other sessions signed out' });
 }
 export async function uploadAvatar(req, res) {
@@ -156,6 +166,7 @@ export async function uploadAvatar(req, res) {
     if (!previous) throw new ApiError(404, 'Account not found');
   } catch (error) { await adapter.remove(key); throw error; }
   if (previous.avatar) await storageFor(previous.avatar.provider).remove(previous.avatar.key);
+  await audit(req, 'account.avatar_update', req.user._id);
   res.json({ success: true, user: await User.findById(req.user._id) });
 }
 export async function getAvatar(req, res) {
@@ -166,14 +177,33 @@ export async function getAvatar(req, res) {
 export async function deleteAvatar(req, res) {
   const user = await User.findByIdAndUpdate(req.user._id, { $unset: { avatar: 1 }, $set: { hasAvatar: false } }).select('+avatar');
   if (user.avatar) await storageFor(user.avatar.provider).remove(user.avatar.key);
+  await audit(req, 'account.avatar_update', req.user._id);
   res.json({ success: true, user: await User.findById(req.user._id) });
 }
 export async function listAudit(req, res) {
-  const { page, limit, action } = req.query;
-  const filter = action ? { action } : {};
-  const [events, total] = await Promise.all([
-    AuditEvent.find(filter).sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit).populate('actor', 'name email'),
+  const { page, limit, action, search, role } = req.query;
+  const conditions = [];
+  if (action) conditions.push({ action });
+  if (search) {
+    const pattern = { $regex: escapeRegex(search), $options: 'i' };
+    const users = await User.find({ name: pattern }).select('_id');
+    conditions.push({ $or: [{ 'actorSnapshot.name': pattern }, { 'actorSnapshot.id': pattern },
+      { target: pattern }, { actor: { $in: users.map((u) => u._id) } },
+      ...(/^[a-f\d]{24}$/i.test(search) ? [{ actor: search }] : [])] });
+  }
+  if (role) {
+    const users = await User.find({ role }).select('_id');
+    conditions.push({ $or: [{ 'actorSnapshot.role': role },
+      { 'actorSnapshot.role': { $exists: false }, actor: { $in: users.map((u) => u._id) } }] });
+  }
+  const filter = conditions.length ? { $and: conditions } : {};
+  const [events, total, actions] = await Promise.all([
+    AuditEvent.find(filter).sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit).lean(),
     AuditEvent.countDocuments(filter),
+    AuditEvent.distinct('action'),
   ]);
-  res.json({ success: true, events, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
+  // Preserve the raw ID even when an older event points at a deleted account.
+  for (const event of events) event.actorId = String(event.actor);
+  await AuditEvent.populate(events, { path: 'actor', select: 'name role' });
+  res.json({ success: true, events, actions: actions.sort(), pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
 }
