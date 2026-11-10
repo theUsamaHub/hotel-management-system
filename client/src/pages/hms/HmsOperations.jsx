@@ -1,4 +1,5 @@
 import { Policies, Notifications, Reports, Monitoring } from './Management.jsx';
+import { useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAuth from '../../hooks/useAuth.js';
@@ -17,7 +18,11 @@ function HotelWorkspace({ hotel, role, initialTab }) {
   const isGuest = role === 'user';
   const canBook = ['admin', 'manager', 'receptionist', 'user'].includes(role);
   const canManage = ['admin', 'manager'].includes(role);
-  const [tab, setTab] = useState(initialTab || (isGuest ? 'search' : 'rooms'));
+  const [params, setParams] = useSearchParams();
+  const defaultTab = initialTab || (isGuest ? 'search' : 'rooms');
+  function setTab(value) {
+    setParams((current) => { const next = new URLSearchParams(current); next.set('tab', value); return next; });
+  }
   const [editing, setEditing] = useState(null);
   const tabs = [
     ...(!isGuest ? [['rooms', 'Rooms']] : []),
@@ -47,6 +52,8 @@ function HotelWorkspace({ hotel, role, initialTab }) {
     ...(canManage ? [['reports', 'Reports']] : []),
     ...(canManage || isGuest ? [['feedback', isGuest ? 'My feedback' : 'Guest feedback']] : []),
   ];
+  const requestedTab = params.get('tab') || defaultTab;
+  const tab = tabs.some(([value]) => value === requestedTab) ? requestedTab : defaultTab;
   function navigate(value) {
     setEditing(null);
     setTab(value);
@@ -120,7 +127,7 @@ export default function HmsOperations({ initialTab }) {
     <>
       <div className="page-heading">
         <div>
-          <p className="eyebrow">LuxuryStay Hospitality</p>
+          <p className="eyebrow">Luxury Star Hotel</p>
           <h1>
             {user.role === 'user'
               ? {

@@ -1,6 +1,13 @@
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
 
+.lsh-brand { display: inline-flex; align-items: center; gap: 11px; color: inherit; white-space: nowrap; }
+.lsh-brand img { width: 44px; height: 44px; flex: none; }
+.lsh-wordmark { font-family: Georgia, serif; font-size: 24px; font-weight: 400; letter-spacing: -.5px; line-height: 1.1; }
+.lsh-wordmark small { display: block; margin-top: 6px; font-family: Arial, sans-serif; font-size: 9px; letter-spacing: 4px; font-weight: 600; }
+.sidebar .lsh-wordmark { font-size: 21px; }
+.sidebar .lsh-brand img { width: 38px; height: 38px; }
+
 .page-transition {
   animation: page-enter 150ms ease-out;
 }

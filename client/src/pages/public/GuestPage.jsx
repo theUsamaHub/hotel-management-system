@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import GuestLink from '../../components/GuestLink.jsx';
+
 import {
   ArrowRight,
   BedDouble,
@@ -35,9 +36,9 @@ export function GuestCTA() {
         <h2>Make room for a memorable stay.</h2>
         <p>Create your account to explore live availability and plan your visit.</p>
       </div>
-      <Link className="button" to="/register">
+      <GuestLink className="button" to="/register">
         Start your journey <ArrowRight size={16} />
-      </Link>
+      </GuestLink>
     </section>
   );
 }
@@ -116,7 +117,7 @@ export default function GuestPage({ page }) {
     features: [
       'Your guest account',
       'Every detail. One place.',
-      'Discover the tools that help you plan, manage and remember your stay. These are the features available in LuxuryStay today.',
+      'Discover the tools that help you plan, manage and remember your stay. These are the features available in Luxury Star Hotel today.',
     ],
     stays: [
       'Rooms & stays',
@@ -124,9 +125,9 @@ export default function GuestPage({ page }) {
       'Choose your hotel, explore available rooms and find the space that fits your plans.',
     ],
     about: [
-      'About LuxuryStay',
+      'About Luxury Star Hotel',
       'Thoughtful hospitality. Connected details.',
-      'LuxuryStay brings the guest journey and the hotel team together, from the first reservation to the final farewell.',
+      'Luxury Star Hotel brings the guest journey and the hotel team together, from the first reservation to the final farewell.',
     ],
     services: [
       'During your stay',
@@ -148,13 +149,13 @@ export default function GuestPage({ page }) {
     <main className="guest-site">
       <GuestHero eyebrow={content[0]} title={content[1]} description={content[2]}>
         <div className="linear-actions">
-          <Link className="button" to="/user/operations">
+          <GuestLink className="button" to="/user/operations">
             {page === 'contact' ? 'Find your hotel' : 'Explore availability'}{' '}
             <ArrowRight size={16} />
-          </Link>
-          <Link className="button secondary" to="/login">
+          </GuestLink>
+          <GuestLink className="button secondary" to="/login">
             Guest sign in
-          </Link>
+          </GuestLink>
         </div>
       </GuestHero>
       {page === 'stays' && (
@@ -195,7 +196,7 @@ export default function GuestPage({ page }) {
             </div>
             <div>
               <p>
-                A great visit depends on the small things working together. LuxuryStay connects
+                A great visit depends on the small things working together. Luxury Star Hotel connects
                 reservations, reception, housekeeping and guest services so the right team can take
                 care of the next step.
               </p>
@@ -252,9 +253,9 @@ export default function GuestPage({ page }) {
             Examples are illustrative. Each property sets its own service catalog, availability and
             charges. Billable completed services appear on your bill.
           </p>
-          <Link className="button secondary" to="/user/services">
+          <GuestLink className="button secondary" to="/user/services">
             Open my guest services
-          </Link>
+          </GuestLink>
         </section>
       )}
       {page === 'help' && (
@@ -298,9 +299,9 @@ export default function GuestPage({ page }) {
               Sign in and select your hotel to see its contact details. Reception can help with
               arrival arrangements and booking-policy exceptions.
             </p>
-            <Link to="/user/operations" className="button secondary">
+            <GuestLink to="/user/operations" className="button secondary">
               View hotel details
-            </Link>
+            </GuestLink>
           </article>
           <article className="card">
             <CalendarDays />
@@ -309,9 +310,9 @@ export default function GuestPage({ page }) {
               Keep your booking reference ready when contacting reception. You can find it in your
               reservations.
             </p>
-            <Link to="/user/reservations" className="button secondary">
+            <GuestLink to="/user/reservations" className="button secondary">
               My reservations
-            </Link>
+            </GuestLink>
           </article>
           <article className="card">
             <Heart />
@@ -319,9 +320,9 @@ export default function GuestPage({ page }) {
             <p>
               Report a room issue or request an available service directly from your active stay.
             </p>
-            <Link to="/user/services" className="button secondary">
+            <GuestLink to="/user/services" className="button secondary">
               Guest services
-            </Link>
+            </GuestLink>
           </article>
         </section>
       )}

@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import GuestLink from '../../components/GuestLink.jsx';
+
 import { ArrowRight, ArrowDown } from 'lucide-react';
 import { GuestCTA } from './GuestPage.jsx';
 export default function Home() {
@@ -21,9 +22,9 @@ export default function Home() {
             <br />
             Let the details fall into place.
           </p>
-          <Link className="button" to="/user/operations">
+          <GuestLink className="button" to="/user/operations">
             Plan your stay <ArrowRight size={18} />
-          </Link>
+          </GuestLink>
         </div>
         <div className="hero-bottom">
           <span>DISCOVER · STAY · CONNECT</span>
@@ -33,7 +34,7 @@ export default function Home() {
         </div>
       </section>
       <div className="destination-title">
-        <span>LUXURYSTAY</span>
+        <span>LUXURY STAR</span>
         <p>THOUGHTFUL STAYS. CONNECTED HOSPITALITY.</p>
         <small>Coastal atmosphere artwork · Explore actual availability in your account</small>
       </div>
@@ -47,13 +48,13 @@ export default function Home() {
               for your time.
             </h2>
             <p>
-              From choosing a room to your final invoice, LuxuryStay brings your hotel and your
+              From choosing a room to your final invoice, Luxury Star Hotel brings your hotel and your
               plans together. A personal space for the practical details, so you can enjoy the
               visit.
             </p>
-            <Link className="editorial-link" to="/about">
-              Discover LuxuryStay <ArrowRight size={17} />
-            </Link>
+            <GuestLink className="editorial-link" to="/about">
+              Discover Luxury Star Hotel <ArrowRight size={17} />
+            </GuestLink>
           </div>
           <figure className="discovery-image">
             <img
@@ -86,9 +87,9 @@ export default function Home() {
                 More to look forward to.
               </h2>
             </div>
-            <Link className="editorial-link" to="/features">
+            <GuestLink className="editorial-link" to="/features">
               All guest features <ArrowRight size={17} />
-            </Link>
+            </GuestLink>
           </div>
           <div className="journey-grid">
             {[
@@ -118,10 +119,10 @@ export default function Home() {
                 <span className="journey-number">{number}</span>
                 <h3>{title}</h3>
                 <p>{text}</p>
-                <Link className="editorial-link" to={to}>
+                <GuestLink className="editorial-link" to={to}>
                   {label}
                   <ArrowRight size={16} />
-                </Link>
+                </GuestLink>
               </article>
             ))}
           </div>
@@ -145,9 +146,9 @@ export default function Home() {
               Bookings are confirmed by the hotel team. Payments are collected externally and
               recorded by reception; the website does not charge your card online.
             </p>
-            <Link className="editorial-link" to="/features">
+            <GuestLink className="editorial-link" to="/features">
               See what your account can do <ArrowRight size={17} />
-            </Link>
+            </GuestLink>
           </div>
         </section>
         <GuestCTA />

@@ -76,7 +76,7 @@ export default function UserDashboard() {
   return (
     <>
       <section className="guest-account-hero">
-        <p className="eyebrow">Your LuxuryStay</p>
+        <p className="eyebrow">Your Luxury Star Hotel</p>
         <h1>Welcome back, {user.name.split(' ')[0]}.</h1>
         <p>Your next stay, and every detail that comes with it.</p>
         <Link className="button" to="/user/operations">

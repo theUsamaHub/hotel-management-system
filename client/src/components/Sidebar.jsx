@@ -1,3 +1,4 @@
+import Brand from './Brand.jsx';
 import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import {
@@ -47,10 +48,7 @@ export default function Sidebar() {
   return (
     <aside className={`sidebar ${menuOpen ? 'menu-open' : ''}`} data-lenis-prevent>
       <Link to="/" className="brand">
-        <span className="brand-mark">
-          <Layers3 size={22} />
-        </span>
-        LuxuryStay<span className="brand-dot">®</span>
+        <Brand />
       </Link>
       <div className="workspace-label">
         <span className="workspace-icon">L</span>
@@ -79,14 +77,14 @@ export default function Sidebar() {
       <div className="sidebar-bottom">
         <div className="sidebar-note">
           <Layers3 size={20} />
-          <h3>Space to grow.</h3>
+          <h3>Hospitality, together.</h3>
           <p>
-            Everything in its place.
+            Every guest. Every detail.
             <br />
-            More room for what matters.
+            A memorable stay starts here.
           </p>
           <Link to="/">
-            Explore LuxuryStay <ArrowUpRight size={14} />
+            Explore Luxury Star Hotel <ArrowUpRight size={14} />
           </Link>
         </div>
         <button

@@ -7,7 +7,7 @@ import ErrorState from '../../components/ErrorState.jsx';
 import Pagination from '../../components/Pagination.jsx';
 
 export const money = (amount, currency) =>
-  (amount / 100).toLocaleString(undefined, { style: 'currency', currency });
+  (amount / 100).toLocaleString(undefined, { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 });
 export const dateAfter = (days) =>
   new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
 const fail = (error) =>
@@ -31,6 +31,7 @@ export function useSave(fn, success) {
     mutationFn: fn,
     onSuccess: (result) => {
       client.invalidateQueries({ queryKey: ['hms'] });
+      client.invalidateQueries({ queryKey: ['admin-dashboard'] });
       toast.success('Saved successfully');
       success?.(result);
     },
@@ -62,7 +63,7 @@ export function Field({
     <label className="hms-field">
       {label}
       {options ? (
-        <select required={required} value={value} onChange={(e) => change(name, e.target.value)}>
+        <select aria-label={label} name={name} required={required} value={value} onChange={(e) => change(name, e.target.value)}>
           {options.map(([value, label]) => (
             <option key={value} value={value}>
               {label}
@@ -71,6 +72,7 @@ export function Field({
         </select>
       ) : (
         <input
+          aria-label={label}
           name={name}
           type={type}
           required={required}

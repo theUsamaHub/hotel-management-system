@@ -5,7 +5,7 @@ import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowRight, Layers3, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuth from '../hooks/useAuth.js';
-import { dashboardPath } from '../utils/auth.js';
+import { returnPath } from '../utils/auth.js';
 import { errorMessage } from '../api/axios.js';
 import Loader from './Loader.jsx';
 
@@ -34,29 +34,29 @@ export default function AuthForm({ mode }) {
   const submit = async (values) => {
     try {
       const user = await auth[mode](values);
-      toast.success(isRegister ? 'Your workspace is ready' : 'Welcome back');
-      navigate(dashboardPath(user), { replace: true });
+      toast.success(isRegister ? 'Your hotel account is ready' : 'Welcome back');
+      navigate(returnPath(user, location.state?.from), { replace: true });
     } catch (error) {
       toast.error(errorMessage(error));
     }
   };
   if (auth.loading) return <Loader />;
-  if (auth.user) return <Navigate to={dashboardPath(auth.user)} replace />;
+  if (auth.user) return <Navigate to={returnPath(auth.user, location.state?.from)} replace />;
   return (
     <main className="auth-shell">
       <aside className="auth-story">
-        <span className="eyebrow">A place for everything</span>
+        <span className="eyebrow">Luxury Star Hotel</span>
         <h1>
-          Good things
+          Exceptional stays
           <br />
           start with
           <br />
-          <em>structure.</em>
+          <em>you.</em>
         </h1>
         <p>
-          Your people, your categories, your next big idea.
+          Your room, your preferences, your next escape.
           <br />
-          Bring it all together in one thoughtful workspace.
+          Plan your stay and let us take care of the details.
         </p>
         <div className="auth-art">
           <Layers3 size={90} strokeWidth={0.6} />
@@ -68,7 +68,7 @@ export default function AuthForm({ mode }) {
       <section className="auth-panel">
         <div className="auth-content">
           <span className="eyebrow">
-            {isRegister ? 'Make room for what’s next' : 'Your workspace awaits'}
+            {isRegister ? 'Make room for what’s next' : 'Your next stay awaits'}
           </span>
           <h2>{isRegister ? 'Create your account' : 'Welcome back.'}</h2>
           {!isRegister && location.state?.accountNotice === 'password-reset' && (
@@ -83,7 +83,7 @@ export default function AuthForm({ mode }) {
           )}
           <p className="muted">
             {isRegister
-              ? 'A fresh start, with everything in its place.'
+              ? 'Reserve your room, request services and keep every stay in one place.'
               : 'Sign in to pick up where you left off.'}
           </p>
           <form onSubmit={handleSubmit(submit)} noValidate>
@@ -129,7 +129,7 @@ export default function AuthForm({ mode }) {
           )}
           <p className="auth-switch">
             {isRegister ? 'Already have an account?' : 'New around here?'}{' '}
-            <Link to={isRegister ? '/login' : '/register'}>
+            <Link to={isRegister ? '/login' : '/register'} state={location.state}>
               {isRegister ? 'Sign in' : 'Create an account'}
             </Link>
           </p>

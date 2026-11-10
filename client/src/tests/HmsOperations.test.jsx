@@ -1,3 +1,4 @@
+import { MemoryRouter } from 'react-router-dom';
 import { test, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -66,7 +67,7 @@ function setup(role = 'admin', overrides = {}) {
   render(
     <QueryClientProvider client={client}>
       <AuthContext.Provider value={{ user: { role } }}>
-        <HmsOperations />
+        <MemoryRouter><HmsOperations /></MemoryRouter>
       </AuthContext.Provider>
     </QueryClientProvider>,
   );
