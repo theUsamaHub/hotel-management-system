@@ -1,4 +1,5 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import '../admin-glass.css';
 import { useState } from 'react';
 import { LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -7,6 +8,19 @@ import Sidebar from '../components/Sidebar.jsx';
 import useAuth from '../hooks/useAuth.js';
 
 export default function AdminLayout() {
+  const { pathname } = useLocation();
+  const pageLabel =
+    {
+      dashboard: 'Overview',
+      operations: 'Hotel operations',
+      hotels: 'Hotels & branches',
+      staff: 'Hotel staff',
+      categories: 'Categories',
+      media: 'Media library',
+      users: 'Team members',
+      activity: 'Activity log',
+      profile: 'Account settings',
+    }[pathname.split('/')[2]] || 'Administration';
   const { user, logout } = useAuth();
   const [signingOut, setSigningOut] = useState(false);
   const signOut = async () => {
@@ -20,16 +34,18 @@ export default function AdminLayout() {
     }
   };
   return (
-    <div className="workspace-shell">
+    <div className="workspace-shell admin-glass">
+      <a className="admin-skip" href="#admin-content">
+        Skip to content
+      </a>
       <Sidebar />
       <div className="workspace-main">
         <header className="workspace-topbar admin-topbar">
           <span>
-            Workspace <span className="muted">/ Administration</span>
+            Administration <span className="muted">/ {pageLabel}</span>
           </span>
           <div>
-            <span className="status-dot" />
-            <span className="connection-label">Administration</span>
+            <span className="connection-label">{user.name}</span>
             <span className="avatar">{user.name.slice(0, 1)}</span>
             <button
               className="button secondary admin-signout"
@@ -41,7 +57,7 @@ export default function AdminLayout() {
             </button>
           </div>
         </header>
-        <main className="workspace-content">
+        <main className="workspace-content" id="admin-content" tabIndex={-1}>
           <Outlet />
         </main>
         <div className="workspace-footer">

@@ -1,0 +1,870 @@
+/* Admin-only silver glass system. Guest and staff surfaces retain their own theme. */
+@font-face {
+  font-family: 'Outfit Admin';
+  src: url('/fonts/Outfit-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.admin-glass {
+  --paper: #dedee0;
+  --surface: #f9f9fa;
+  --wash: #ededf0;
+  --lift: #e4e4e8;
+  --ink: #171719;
+  --ink-muted: #39393f;
+  --muted: #5c5c65;
+  --line: #22222d14;
+  --accent: #19191c;
+  --chart-current: #202023;
+  --chart-previous: #9999a3;
+  --chart-1: #202023;
+  --chart-2: #686873;
+  --chart-3: #9696a0;
+  --chart-4: #b9b9c2;
+  --chart-5: #d9d9e0;
+  --glass: #ffffffae;
+  --glass-strong: #ffffffe0;
+  --glass-edge: #ffffffdb;
+  --glass-shadow: 0 8px 28px #25253006, inset 0 1px 0 #ffffffb3;
+  color-scheme: light;
+  font-family: 'Outfit Admin', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 8% 0%, #fff9, transparent 45%),
+    radial-gradient(ellipse at 100% 55%, #fff6, transparent 55%), #d4d4d8;
+  padding: 24px;
+  gap: 0;
+  min-height: 100dvh;
+  isolation: isolate;
+}
+.admin-glass *,
+.admin-glass *::before,
+.admin-glass *::after {
+  box-sizing: border-box;
+}
+.admin-glass :is(button, input, select, textarea) {
+  font-family: inherit;
+}
+.admin-glass :is(h1, h2, h3, p) {
+  overflow-wrap: anywhere;
+}
+.admin-glass h1 {
+  font-size: clamp(27px, 2.3vw, 36px);
+  font-weight: 500;
+  letter-spacing: -1.2px;
+}
+.admin-glass h2 {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.65px;
+}
+.admin-glass h3 {
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+.admin-glass .eyebrow {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+.admin-glass .muted {
+  color: var(--muted);
+}
+.admin-glass .sidebar {
+  width: 238px;
+  height: calc(100dvh - 48px);
+  top: 24px;
+  padding: 30px 18px 22px;
+  border: 1px solid var(--glass-edge);
+  border-right: 0;
+  border-radius: 32px 0 0 32px;
+  background: var(--glass-strong);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  scrollbar-width: thin;
+  scrollbar-color: #bbbbc3 transparent;
+}
+.admin-glass .sidebar > .brand {
+  margin: 4px 6px 27px;
+}
+.admin-glass .lsh-wordmark {
+  font-family: 'Outfit Admin', sans-serif;
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -0.8px;
+}
+.admin-glass .lsh-wordmark small {
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: 3.5px;
+}
+.admin-glass .lsh-brand {
+  gap: 9px;
+}
+.admin-glass .lsh-brand img {
+  filter: grayscale(1);
+  border-radius: 12px;
+  width: 37px;
+  height: 37px;
+}
+.admin-glass .workspace-label {
+  border: 0;
+  margin: 0 7px 19px;
+  padding: 8px 0;
+  font-size: 12px;
+}
+.admin-glass .workspace-label .workspace-icon {
+  display: none;
+}
+.admin-glass .workspace-label small {
+  font-size: 10px;
+  color: var(--muted);
+}
+.admin-glass .workspace-label .badge {
+  margin-left: auto;
+  font-size: 9px;
+}
+.admin-glass .sidebar > .eyebrow {
+  margin: 0 16px 14px;
+  font-size: 10px;
+}
+.admin-glass .sidebar nav {
+  gap: 7px;
+}
+.admin-glass .sidebar nav a {
+  min-height: 46px;
+  padding: 8px 12px;
+  border-radius: 28px;
+  font-size: 13px;
+  font-weight: 400;
+  gap: 10px;
+  color: var(--ink-muted);
+}
+.admin-glass .sidebar nav a svg {
+  width: 30px;
+  height: 30px;
+  padding: 7px;
+  flex-shrink: 0;
+  background: #ffffff8c;
+  border-radius: 50%;
+}
+.admin-glass .sidebar nav a:hover {
+  background: var(--wash);
+  color: var(--ink);
+}
+.admin-glass .sidebar nav a.active {
+  background: linear-gradient(#323235, #101012);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 #ffffff45,
+    0 4px 10px #00000012;
+}
+.admin-glass .sidebar nav a.active svg {
+  background: #fff;
+  color: #171719;
+}
+.admin-glass .sidebar-bottom {
+  padding-top: 28px;
+}
+.admin-glass .signout {
+  min-height: 44px;
+  font-size: 13px;
+  border-radius: 24px;
+}
+.admin-glass .signout:hover {
+  background: var(--wash);
+  color: var(--ink);
+}
+.admin-glass .account {
+  margin-top: 14px;
+  padding-top: 18px;
+}
+.admin-glass .account strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+.admin-glass .account small {
+  font-size: 11px;
+  margin-top: 3px;
+}
+.admin-glass .avatar {
+  background: linear-gradient(140deg, #fff, #dedee4);
+  color: #27272b;
+  border: 1px solid var(--glass-edge);
+  width: 38px;
+  height: 38px;
+}
+.admin-glass .workspace-main {
+  border: 1px solid var(--glass-edge);
+  border-radius: 0 32px 32px 0;
+  background: #eeeeef50;
+}
+.admin-glass .workspace-topbar {
+  position: relative;
+  top: auto;
+  height: 78px;
+  padding: 0 30px;
+  background: transparent;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0 32px 0 0;
+  font-size: 13px;
+  gap: 16px;
+}
+.admin-glass .workspace-topbar > div {
+  font-size: 12px;
+}
+.admin-glass .connection-label {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-glass .workspace-content {
+  max-width: 1800px;
+  padding: 30px;
+  margin-inline: auto;
+}
+.admin-glass .workspace-footer {
+  margin: auto 30px 0;
+  padding: 22px 0;
+  font-size: 11px;
+  color: var(--muted);
+  gap: 16px;
+}
+.admin-glass .page-heading {
+  margin-bottom: 28px;
+  gap: 20px;
+}
+.admin-glass .page-heading p:not(.eyebrow) {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 10px;
+}
+.admin-glass :is(.card, .modal) {
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 26px;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+.admin-glass .card {
+  min-width: 0;
+}
+.admin-glass .button {
+  border-radius: 24px;
+  min-height: 44px;
+  background: linear-gradient(#333337, #131315);
+  border: 1px solid #27272b;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 10px 18px;
+  box-shadow:
+    inset 0 1px 0 #ffffff30,
+    0 3px 8px #0000000a;
+}
+.admin-glass .button:hover {
+  background: #414147;
+  color: #fff;
+}
+.admin-glass :is(.button.secondary, .icon-button) {
+  background: #ffffff9c;
+  border: 1px solid #22222d24;
+  color: var(--ink);
+  box-shadow: none;
+}
+.admin-glass :is(.button.secondary, .icon-button):hover {
+  background: var(--surface);
+  border-color: #22222d55;
+}
+.admin-glass .button.small {
+  min-height: 36px;
+  padding: 7px 13px;
+  font-size: 12px;
+}
+.admin-glass .icon-button {
+  border-radius: 50%;
+  min-width: 44px;
+  min-height: 44px;
+}
+.admin-glass .button.danger {
+  color: #922c3c;
+  background: #fff0f2;
+  border-color: #e9bcc4;
+}
+.admin-glass button:disabled {
+  opacity: 0.5;
+  box-shadow: none;
+}
+.admin-glass :is(button, a, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+.admin-glass :is(input, select, textarea) {
+  background: #ffffffbd;
+  color: var(--ink);
+  border: 1px solid #2c2c3826;
+  border-radius: 14px;
+  min-height: 46px;
+  padding: 11px 14px;
+  font-size: 14px;
+  max-width: 100%;
+}
+.admin-glass :is(input, select, textarea):focus {
+  border-color: #565661;
+  box-shadow: 0 0 0 3px #23232b09;
+}
+.admin-glass :is(input[type='checkbox'], input[type='radio']) {
+  min-height: 18px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  accent-color: var(--ink);
+}
+.admin-glass input[type='file'] {
+  padding: 8px;
+}
+.admin-glass input::file-selector-button {
+  font: inherit;
+  border: 0;
+  border-radius: 20px;
+  padding: 8px 14px;
+  margin-right: 12px;
+  background: var(--wash);
+  color: var(--ink);
+  cursor: pointer;
+}
+.admin-glass :is(.field label, .hms-field) {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+.admin-glass .badge {
+  border-radius: 20px;
+  background: #eaeaecb3;
+  border: 1px solid #22222d0d;
+  color: var(--ink-muted);
+  padding: 5px 11px;
+  font-size: 11px;
+  font-weight: 400;
+}
+.admin-glass .badge.inactive {
+  background: transparent;
+  border-style: dashed;
+  color: var(--muted);
+}
+.admin-glass .table-wrap {
+  border-radius: 16px;
+}
+.admin-glass table {
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  font-size: 13px;
+}
+.admin-glass th {
+  background: transparent;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  border: 0;
+  padding: 12px 16px;
+}
+.admin-glass td {
+  background: #ffffff68;
+  border: 0;
+  padding: 15px 16px;
+  vertical-align: middle;
+  color: var(--ink-muted);
+}
+.admin-glass td:first-child {
+  border-radius: 14px 0 0 14px;
+}
+.admin-glass td:last-child {
+  border-radius: 0 14px 14px 0;
+}
+.admin-glass tbody tr:hover {
+  background: transparent;
+}
+.admin-glass tbody tr:hover td {
+  background: #ffffffd1;
+}
+.admin-glass td strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.admin-glass .toolbar {
+  gap: 14px;
+}
+.admin-glass .pagination {
+  padding-top: 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.admin-glass .hms-tabs {
+  background: #ffffff52;
+  border: 1px solid var(--glass-edge);
+  padding: 8px;
+  border-radius: 24px;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+.admin-glass .hms-tabs .button {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+  box-shadow: none;
+  padding: 9px 14px;
+  font-size: 12px;
+}
+.admin-glass .hms-tabs .button:hover {
+  background: #ffffffb3;
+  color: var(--ink);
+}
+.admin-glass .hms-tabs .button[aria-current='page'] {
+  background: #1b1b1e;
+  color: #fff;
+}
+.admin-glass .hms-form {
+  padding: 24px;
+}
+.admin-glass .hotel-contact {
+  background: #ffffff66;
+}
+.admin-glass .analytics-filters {
+  padding: 18px 22px;
+  gap: 18px;
+  border-radius: 22px;
+  align-items: end;
+}
+.admin-glass .analytics-filters label {
+  font-size: 12px;
+  color: var(--muted);
+}
+.admin-glass .analytics-period {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 18px 2px 24px;
+  line-height: 1.7;
+}
+.admin-glass .analytics-metrics {
+  gap: 16px;
+}
+.admin-glass .analytics-metric {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  min-height: 200px;
+  border-radius: 30px;
+}
+.admin-glass .metric-label {
+  color: var(--muted);
+  font-size: 13px;
+  gap: 12px;
+  align-items: center;
+}
+.admin-glass .metric-label svg {
+  width: 38px;
+  height: 38px;
+  padding: 10px;
+  border-radius: 50%;
+  background: #ffffffc9;
+  box-shadow: 0 5px 14px #00000006;
+  flex-shrink: 0;
+  color: #55555b;
+}
+.admin-glass .analytics-metric:nth-child(3) .metric-label svg {
+  background: #1e1e21;
+  color: white;
+}
+.admin-glass .analytics-metric > strong {
+  font-size: clamp(24px, 2vw, 32px);
+  font-weight: 500;
+  letter-spacing: -0.8px;
+  margin: 18px 0 8px;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.admin-glass .analytics-metric small {
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: auto;
+  padding-top: 12px;
+}
+.admin-glass .metric-change {
+  color: var(--ink-muted);
+  font-size: 11px;
+}
+.admin-glass .metric-change.positive {
+  color: #276144;
+}
+.admin-glass .metric-change.negative {
+  color: #963d50;
+}
+.admin-glass .analytics-panel {
+  padding: 26px;
+}
+.admin-glass .analytics-panel > .muted {
+  font-size: 12px;
+}
+.admin-glass .chart-legend i {
+  background: var(--chart-current);
+}
+.admin-glass .chart-legend i.previous {
+  background: var(--chart-previous);
+}
+.admin-glass .chart-gridline {
+  stroke-dasharray: 2 4;
+}
+.admin-glass :is(.trend-svg, .donut-svg) text {
+  font-family: 'Outfit Admin', sans-serif;
+  fill: var(--muted);
+}
+.admin-glass .chart-readout {
+  border-radius: 12px;
+  background: #ffffff70;
+  padding: 10px 12px;
+  margin: 8px 0 16px;
+}
+.admin-glass .chart-data summary {
+  min-height: 36px;
+  padding: 7px 0;
+}
+.admin-glass .desk-grid > div {
+  border-radius: 18px;
+  background: #ffffff63;
+  padding: 14px;
+}
+.admin-glass .desk-grid {
+  gap: 10px;
+}
+.admin-glass .desk-grid strong {
+  font-weight: 500;
+}
+.admin-glass .analytics-definitions {
+  background: #ffffff40;
+  border-color: var(--glass-edge);
+  border-radius: 22px;
+}
+.admin-glass .modal {
+  padding: 28px;
+  background: #f8f8faed;
+}
+.admin-glass .modal::backdrop {
+  background: #20202a55;
+  backdrop-filter: blur(7px);
+}
+.admin-glass .modal-heading {
+  gap: 20px;
+}
+.admin-glass :is(.field-error, .error-message, .error) {
+  color: #a62940;
+}
+.admin-glass .empty {
+  color: var(--muted);
+  padding: 40px 24px;
+}
+.admin-glass .admin-skip {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translate(-50%, -160%);
+  z-index: 100;
+  padding: 12px 22px;
+  background: #171719;
+  color: white;
+  border-radius: 24px;
+}
+.admin-glass .admin-skip:focus {
+  transform: translate(-50%, 0);
+}
+
+/* Preserve the existing theme switch with a graphite version of the same system. */
+:root.dark .admin-glass {
+  --paper: #242428;
+  --surface: #303036;
+  --wash: #38383f;
+  --lift: #42424b;
+  --ink: #f6f6f8;
+  --ink-muted: #d6d6de;
+  --muted: #b1b1be;
+  --line: #ffffff18;
+  --accent: #eeeef3;
+  --glass: #303037c4;
+  --glass-strong: #29292fe8;
+  --glass-edge: #ffffff22;
+  --glass-shadow: 0 8px 28px #00000014, inset 0 1px 0 #ffffff0a;
+  --chart-current: #f1f1f5;
+  --chart-previous: #93939f;
+  --chart-1: #ededf2;
+  --chart-2: #bdbdc8;
+  --chart-3: #9393a3;
+  --chart-4: #6e6e80;
+  --chart-5: #50505f;
+  color-scheme: dark;
+  background: radial-gradient(ellipse at 0 0, #44444c, transparent 55%), #212126;
+}
+:root.dark .admin-glass .workspace-main {
+  background: #24242b66;
+}
+:root.dark .admin-glass :is(.button.secondary, .icon-button, input, select, textarea) {
+  background: #33333bcc;
+  border-color: #ffffff25;
+  color: var(--ink);
+}
+:root.dark .admin-glass .sidebar nav a svg {
+  background: #ffffff0c;
+}
+:root.dark .admin-glass .sidebar nav a.active svg {
+  background: #fff;
+  color: #171719;
+}
+:root.dark
+  .admin-glass
+  :is(td, .chart-readout, .desk-grid > div, .hotel-contact, .hms-tabs, .analytics-definitions) {
+  background: #ffffff06;
+}
+:root.dark .admin-glass tbody tr:hover td {
+  background: #ffffff10;
+}
+:root.dark .admin-glass .badge {
+  background: #ffffff0d;
+  color: var(--ink-muted);
+  border-color: #ffffff17;
+}
+:root.dark .admin-glass .metric-label svg {
+  background: #ffffff10;
+  color: #e4e4ec;
+}
+:root.dark .admin-glass .metric-change.positive {
+  color: #a4d2b9;
+}
+:root.dark .admin-glass .metric-change.negative {
+  color: #ecacb9;
+}
+:root.dark .admin-glass .modal {
+  background: #303037f5;
+}
+:root.dark .admin-glass :is(.field-error, .error-message, .error) {
+  color: #ffb4bd;
+}
+
+@media (min-width: 1600px) {
+  .admin-glass {
+    padding: 36px;
+  }
+  .admin-glass .sidebar {
+    top: 36px;
+    height: calc(100dvh - 72px);
+    width: 250px;
+  }
+  .admin-glass .workspace-content {
+    padding: 36px;
+  }
+}
+@media (max-width: 1100px) {
+  .admin-glass {
+    padding: 14px;
+  }
+  .admin-glass .sidebar {
+    width: 212px;
+    padding: 24px 12px;
+    top: 14px;
+    height: calc(100dvh - 28px);
+  }
+  .admin-glass .lsh-wordmark {
+    font-size: 20px;
+  }
+  .admin-glass .workspace-content {
+    padding: 24px;
+  }
+  .admin-glass .workspace-topbar {
+    padding-inline: 24px;
+  }
+  .admin-glass .analytics-chart-grid,
+  .admin-glass .analytics-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-glass .analytics-filters label {
+    flex: 1 1 160px;
+    min-width: 0;
+  }
+  .admin-glass .account-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 760px) {
+  .admin-glass {
+    padding: 10px;
+    gap: 10px;
+  }
+  .admin-glass .sidebar {
+    width: 100%;
+    position: relative;
+    top: auto;
+    height: auto;
+    border: 1px solid var(--glass-edge);
+    border-radius: 24px;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    overflow: visible;
+  }
+  .admin-glass .sidebar > .brand {
+    margin: 0;
+  }
+  .admin-glass .sidebar .mobile-menu {
+    margin: 0;
+    align-self: center;
+    padding: 8px 15px;
+  }
+  .admin-glass .sidebar nav {
+    grid-column: 1/-1;
+    padding: 16px 0 0;
+  }
+  .admin-glass .sidebar.menu-open nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .admin-glass .sidebar:not(.menu-open) nav {
+    display: none;
+  }
+  .admin-glass .sidebar nav a {
+    font-size: 12px;
+    gap: 7px;
+    padding: 7px;
+  }
+  .admin-glass .sidebar :is(.workspace-label, .sidebar-bottom) {
+    display: none;
+  }
+  .admin-glass .workspace-main {
+    border-radius: 24px;
+  }
+  .admin-glass .workspace-topbar {
+    height: auto;
+    min-height: 65px;
+    padding: 12px 16px;
+    border-radius: 24px 24px 0 0;
+    font-size: 11px;
+  }
+  .admin-glass .workspace-topbar > span {
+    max-width: 60%;
+  }
+  .admin-glass .workspace-topbar .connection-label {
+    display: none;
+  }
+  .admin-glass .admin-signout {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  .admin-glass .workspace-content {
+    padding: 22px 16px;
+  }
+  .admin-glass .workspace-footer {
+    margin-inline: 16px;
+    padding-bottom: 60px;
+    flex-wrap: wrap;
+  }
+  .admin-glass .page-heading {
+    margin-bottom: 22px;
+  }
+  .admin-glass .page-heading h1 {
+    font-size: 29px;
+  }
+  .admin-glass .analytics-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .admin-glass .analytics-metric:nth-child(-n + 2) {
+    grid-column: 1 / -1;
+    min-height: 190px;
+  }
+  .admin-glass .analytics-metric:nth-child(-n + 2) .metric-label {
+    flex-direction: row;
+    align-items: center;
+  }
+  .admin-glass .analytics-metric {
+    padding: 18px;
+    min-height: 205px;
+    border-radius: 24px;
+  }
+  .admin-glass .metric-label {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .admin-glass .analytics-metric > strong {
+    font-size: 25px;
+  }
+  .admin-glass .analytics-panel,
+  .admin-glass .hms-form {
+    padding: 18px;
+  }
+  .admin-glass .analytics-filters {
+    padding: 18px;
+  }
+  .admin-glass .analytics-filters label {
+    min-width: 100%;
+  }
+  .admin-glass .hms-tabs {
+    border-radius: 20px;
+  }
+  .admin-glass .hms-tabs .button {
+    flex: 0 0 auto;
+  }
+  .admin-glass .modal {
+    padding: 20px;
+    border-radius: 24px;
+  }
+  .admin-glass .table-wrap table {
+    min-width: 620px;
+  }
+  .admin-glass :is(input, select, textarea) {
+    font-size: 16px;
+  }
+  .admin-glass .toolbar > input {
+    width: 100%;
+  }
+}
+@media (max-width: 370px) {
+  .admin-glass .analytics-metrics {
+    grid-template-columns: 1fr;
+  }
+  .admin-glass .lsh-wordmark {
+    font-size: 18px;
+  }
+  .admin-glass .lsh-brand img {
+    width: 30px;
+    height: 30px;
+  }
+  .admin-glass .sidebar {
+    padding: 14px;
+  }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .admin-glass :is(.card, .modal) {
+    background: var(--surface);
+  }
+}
+@media print {
+  .admin-glass {
+    background: white;
+    padding: 0;
+  }
+  .admin-glass :is(.sidebar, .workspace-topbar, .workspace-footer, .admin-skip) {
+    display: none;
+  }
+  .admin-glass .workspace-main {
+    border: 0;
+  }
+  .admin-glass .card {
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+}

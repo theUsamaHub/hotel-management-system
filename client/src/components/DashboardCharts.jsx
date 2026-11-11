@@ -1,5 +1,11 @@
 import { useId, useState } from 'react';
-const palette = ['#6d6ae8', '#27958c', '#d69b43', '#cd6b8c', '#7c91a4'];
+const palette = [
+  'var(--chart-1, #6d6ae8)',
+  'var(--chart-2, #27958c)',
+  'var(--chart-3, #d69b43)',
+  'var(--chart-4, #cd6b8c)',
+  'var(--chart-5, #7c91a4)',
+];
 const compact = (value) =>
   new globalThis.Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(
     value,
@@ -56,14 +62,14 @@ export function TrendChart({ title, description, rows, valueKey, previousKey, fo
         <polyline
           points={points(previousKey)}
           fill="none"
-          stroke="#8e9bad"
+          stroke="var(--chart-previous, #8e9bad)"
           strokeWidth="2"
           strokeDasharray="6 5"
         />
         <polyline
           points={points(valueKey)}
           fill="none"
-          stroke="#7774ee"
+          stroke="var(--chart-current, #7774ee)"
           strokeWidth="3"
           strokeLinejoin="round"
         />
@@ -73,7 +79,7 @@ export function TrendChart({ title, description, rows, valueKey, previousKey, fo
             cx={x(index)}
             cy={y(row[valueKey])}
             r={active === index ? 6 : 3}
-            fill="#7774ee"
+            fill="var(--chart-current, #7774ee)"
             tabIndex="0"
             aria-label={`${row.date}: ${format(row[valueKey])}; previous ${row.previousDate}: ${format(row[previousKey])}`}
             onMouseEnter={() => setActive(index)}
