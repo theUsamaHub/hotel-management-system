@@ -868,3 +868,169 @@
     backdrop-filter: none;
   }
 }
+
+/* One viewport frame: the rail and content always share the bottom edge. */
+@media (min-width: 761px) {
+  .admin-glass {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .admin-glass .sidebar {
+    position: relative;
+    top: auto;
+    height: 100%;
+    padding-block: 24px 18px;
+    overflow: hidden;
+  }
+  .admin-glass .sidebar > .brand {
+    margin-bottom: 18px;
+  }
+  .admin-glass .workspace-label {
+    margin-bottom: 12px;
+  }
+  .admin-glass .sidebar nav {
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto;
+    gap: 3px;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  .admin-glass .sidebar nav:hover,
+  .admin-glass .sidebar nav:focus-within {
+    scrollbar-color: #9999a780 transparent;
+  }
+  .admin-glass .sidebar nav a {
+    min-height: 42px;
+    padding-block: 6px;
+  }
+  .admin-glass .sidebar-bottom {
+    padding-top: 12px;
+  }
+  .admin-glass .account {
+    margin-top: 8px;
+    padding-top: 12px;
+  }
+  .admin-glass .workspace-main {
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #9999a780 transparent;
+    scrollbar-gutter: stable;
+  }
+  .admin-glass .workspace-main > * {
+    flex-shrink: 0;
+  }
+  .admin-glass .workspace-topbar {
+    position: sticky;
+    top: 0;
+    min-height: 68px;
+    height: 68px;
+    background: var(--glass-strong);
+    backdrop-filter: blur(24px);
+    z-index: 20;
+  }
+}
+.admin-glass .analytics-filters {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.6fr) minmax(145px, 1fr) minmax(120px, 0.8fr) auto;
+  padding: 20px 22px;
+  gap: 16px;
+  background: linear-gradient(125deg, #ffffffba, #ffffff70);
+}
+.admin-glass .filter-intro {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.admin-glass .filter-intro strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.admin-glass .filter-intro small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.admin-glass .filter-symbol {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--glass-edge);
+}
+.admin-glass .analytics-filters label {
+  min-width: 0;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.2px;
+}
+.admin-glass .analytics-filters select {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 500;
+  border-color: var(--line);
+}
+.admin-glass .analytics-filters > .button {
+  margin: 0;
+  min-height: 44px;
+  white-space: nowrap;
+  border-radius: 14px;
+}
+.admin-glass .conversion-note {
+  color: var(--ink-muted);
+  font-size: 12px;
+  margin: 18px 2px 0;
+  line-height: 1.7;
+}
+.admin-glass .conversion-note a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.admin-glass .conversion-note small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+:root.dark .admin-glass .analytics-filters {
+  background: linear-gradient(125deg, #38383fc9, #303037b3);
+}
+@media (max-width: 1100px) {
+  .admin-glass .analytics-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+  .admin-glass .analytics-filters label {
+    min-width: 0;
+  }
+}
+@media (max-width: 480px) {
+  .admin-glass .analytics-filters {
+    padding: 16px;
+    gap: 14px 10px;
+  }
+  .admin-glass .analytics-filters > label:first-of-type {
+    grid-column: 1 / -1;
+  }
+  .admin-glass .analytics-filters > .button {
+    grid-column: 1 / -1;
+  }
+  .admin-glass .analytics-filters select {
+    font-size: 16px;
+    padding-inline: 8px;
+  }
+}

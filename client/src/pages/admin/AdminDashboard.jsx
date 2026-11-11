@@ -76,7 +76,7 @@ export default function AdminDashboard() {
     queryFn: async ({ signal }) =>
       (
         await api.get('/admin/dashboard', {
-          params: { days, currency, ...(hotel ? { hotel } : {}) },
+          params: { days, currency, convert: 'true', ...(hotel ? { hotel } : {}) },
           signal,
         })
       ).data.dashboard,
@@ -98,6 +98,15 @@ export default function AdminDashboard() {
         </Link>
       </div>
       <section className="card analytics-filters" aria-label="Dashboard filters">
+        <div className="filter-intro">
+          <span className="filter-symbol">
+            <Building2 size={20} />
+          </span>
+          <div>
+            <strong>Your overview</strong>
+            <small>Choose your reporting view</small>
+          </div>
+        </div>
         <label>
           Hotel property
           <select
@@ -129,7 +138,7 @@ export default function AdminDashboard() {
           </select>
         </label>
         <label>
-          Financial currency
+          Display currency
           <select
             aria-label="Financial currency"
             value={currency}
@@ -155,6 +164,16 @@ export default function AdminDashboard() {
         <Loader />
       ) : (
         <>
+          {data.conversion && (
+            <p className="conversion-note">
+              Converted reporting totals in {currency} · Rates as of{' '}
+              {new Date(data.conversion.asOf).toLocaleDateString()} ·{' '}
+              <a href="https://www.exchangerate-api.com" target="_blank" rel="noreferrer">
+                Rates by Exchange Rate API
+              </a>
+              <small>{data.conversion.basis} Original receipts and invoices stay unchanged.</small>
+            </p>
+          )}
           <p className="analytics-period">
             {data.period.from} – {data.daily.at(-1).date} · Compared with {data.period.previousFrom}{' '}
             – {data.daily.at(-1).previousDate} · UTC calendar dates. Today is incomplete.{' '}
@@ -368,11 +387,12 @@ export default function AdminDashboard() {
               reconstructed.
             </p>
             <p>
-              Only financial cards and charts use the currency filter. Payments use receipt creation
-              dates. Issued invoice totals include tax and use issue dates; they are not profit and
-              are never added to payments. Reservation counts use creation dates and include
-              cancelled bookings. Occupancy, staff, properties and work queues are current
-              snapshots, so no historical growth is claimed for them.
+              Only financial cards and charts use the display currency. All recorded currencies are
+              converted using the same latest exchange-rate snapshot for both periods. Payments use
+              receipt creation dates. Issued invoice totals include tax and use issue dates; they
+              are not profit and are never added to payments. Reservation counts use creation dates
+              and include cancelled bookings. Occupancy, staff, properties and work queues are
+              current snapshots, so no historical growth is claimed for them.
             </p>
           </details>
         </>

@@ -1,4 +1,4 @@
-import { test, expect } from '@jest/globals';
+import { test, expect, jest } from '@jest/globals';
 import mongoose from 'mongoose';
 import { session } from './helpers.js';
 import Hotel from '../src/models/Hotel.js';
@@ -8,9 +8,23 @@ import Payment from '../src/models/Payment.js';
 import Invoice from '../src/models/Invoice.js';
 import Reservation from '../src/models/Reservation.js';
 import { comparison } from '../src/controllers/dashboard.js';
+import { exchangeRates } from '../src/services/exchangeRates.js';
 process.env.HMS_TRANSACTION_TESTS = '1';
 const id = () => new mongoose.Types.ObjectId();
 const day = 86400000;
+
+test('exchange rate outages and stale quotes return an explicit error instead of zero totals', async () => {
+  const provider = jest.spyOn(globalThis, 'fetch');
+  try {
+    provider.mockRejectedValueOnce(new Error('offline'));
+    await expect(exchangeRates()).rejects.toMatchObject({ statusCode: 503 });
+    provider.mockResolvedValueOnce({ ok: true, json: async () => ({
+      result: 'success', base_code: 'USD', time_last_update_unix: Math.floor(Date.now() / 1000) - 7 * 86400,
+      rates: { USD: 1, PKR: 250, EUR: 0.9, GBP: 0.8, AED: 3.67 },
+    }) });
+    await expect(exchangeRates()).rejects.toMatchObject({ statusCode: 503 });
+  } finally { provider.mockRestore(); }
+});
 
 test('dashboard reconciles currency-specific financial trends, period boundaries, hotel scope and current inventory', async () => {
   const admin = await session();
@@ -58,6 +72,24 @@ test('dashboard reconciles currency-specific financial trends, period boundaries
   const all = (await admin.agent.get('/api/admin/dashboard').query({ days: 7 })).body.dashboard;
   expect(all.totals.payments.current).toBe(36111);
   expect(all.properties.active).toBe(2);
+  const fetchRates = jest.spyOn(globalThis, 'fetch').mockResolvedValue({ ok: true, json: async () => ({
+    result: 'success', base_code: 'USD', time_last_update_unix: Math.floor(Date.now() / 1000),
+    rates: { USD: 1, PKR: 250, EUR: 0.9, GBP: 0.8, AED: 3.67 },
+  }) });
+  try {
+    const converted = await admin.agent.get('/api/admin/dashboard').query({ hotel: hotel.id, days: 7, currency: 'USD', convert: 'true' });
+    expect(converted.status).toBe(200);
+    const report = converted.body.dashboard;
+    expect(report.totals.payments.current).toBe(90100);
+    expect(report.totals.payments.previous).toBe(40);
+    expect(report.totals.invoices.current).toBe(28);
+    expect(report.daily.reduce((sum, row) => sum + row.payments, 0)).toBe(90100);
+    expect(report.totals.bookings.current).toBe(2);
+    expect(report.conversion.source).toBe('ExchangeRate-API');
+    const pkr = await admin.agent.get('/api/admin/dashboard').query({ hotel: hotel.id, days: 7, currency: 'PKR', convert: 'true' });
+    expect(pkr.body.dashboard.totals.payments.current).toBe(22525000);
+    expect(fetchRates).toHaveBeenCalledTimes(1);
+  } finally { fetchRates.mockRestore(); }
 });
 
 test('dashboard is admin-only, validates filters and reports empty and declining periods honestly', async () => {
