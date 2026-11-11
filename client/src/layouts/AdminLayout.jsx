@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import '../admin-glass.css';
-import { useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import Loader from '../components/Loader.jsx';
 import { LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../api/axios.js';
@@ -9,6 +10,10 @@ import useAuth from '../hooks/useAuth.js';
 
 export default function AdminLayout() {
   const { pathname } = useLocation();
+  const scrollPane = useRef(null);
+  useEffect(() => {
+    if (scrollPane.current) scrollPane.current.scrollTop = 0;
+  }, [pathname]);
   const pageLabel =
     {
       dashboard: 'Overview',
@@ -39,7 +44,7 @@ export default function AdminLayout() {
         Skip to content
       </a>
       <Sidebar />
-      <div className="workspace-main">
+      <div className="workspace-main" ref={scrollPane}>
         <header className="workspace-topbar admin-topbar">
           <span>
             Administration <span className="muted">/ {pageLabel}</span>
@@ -58,7 +63,9 @@ export default function AdminLayout() {
           </div>
         </header>
         <main className="workspace-content" id="admin-content" tabIndex={-1}>
-          <Outlet />
+          <Suspense key={pathname} fallback={<Loader />}>
+            <Outlet />
+          </Suspense>
         </main>
         <div className="workspace-footer">
           Thoughtful service. Exceptional stays.<span>Luxury Star Hotel</span>
