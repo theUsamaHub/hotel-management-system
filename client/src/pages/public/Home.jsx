@@ -26,6 +26,16 @@ export default function Home() {
             Plan your stay <ArrowRight size={18} />
           </GuestLink>
         </div>
+        <figure className="guest-home-image">
+          <img
+            src="/images/quiet-suite.png"
+            alt="Illustrative sunlit hotel suite with linen furnishings"
+            fetchPriority="high"
+          />
+          <figcaption>
+            A little room to unwind. <span>Illustrative artwork</span>
+          </figcaption>
+        </figure>
         <div className="hero-bottom">
           <span>DISCOVER · STAY · CONNECT</span>
           <a href="#experience" aria-label="Explore the guest experience">
@@ -48,8 +58,8 @@ export default function Home() {
               for your time.
             </h2>
             <p>
-              From choosing a room to your final invoice, Luxury Star Hotel brings your hotel and your
-              plans together. A personal space for the practical details, so you can enjoy the
+              From choosing a room to your final invoice, Luxury Star Hotel brings your hotel and
+              your plans together. A personal space for the practical details, so you can enjoy the
               visit.
             </p>
             <GuestLink className="editorial-link" to="/about">

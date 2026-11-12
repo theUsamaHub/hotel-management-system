@@ -6,7 +6,7 @@ Open **Admin → Overview** (`/admin/dashboard`). This replaces the starter cate
 
 - All properties or a specific hotel, including historical data from inactive properties.
 - Last 7, 30 or 90 UTC calendar days, including today so far, compared with the immediately preceding equal-length calendar period.
-- PKR, USD, EUR, GBP or AED for financial metrics. Currencies are never combined; operational counts remain across all currencies.
+- PKR, USD, EUR, GBP or AED for financial metrics. The dashboard converts all recorded currencies to the selected display currency at one current reference-rate snapshot; operational counts are unchanged. The rate date and provider are displayed. Original records remain in their recorded currencies.
 - Refresh button and generated-at time. Filter changes display a loading state instead of presenting old values under a new scope.
 - Payment, booking and invoice line charts with a dashed previous-period series, keyboard-focusable points, exact-value readouts and expandable data tables.
 - Reservation-status donut and current room-status bars, each with numerical counts and percentages.
@@ -15,9 +15,9 @@ Open **Admin → Overview** (`/admin/dashboard`). This replaces the starter cate
 
 ## Definitions
 
-**Payments recorded:** external receipts grouped by their creation timestamp and selected currency. They include deposits and settlement receipts and are not online charges, profit, or recognized revenue.
+**Payments recorded:** external receipts grouped by their creation timestamp and converted to the selected display currency. They include deposits and settlement receipts and are not online charges, profit, or recognized revenue.
 
-**Issued invoice total:** final invoices grouped by issue timestamp and selected currency, including tax and after discounts. Drafts are excluded. Invoice totals and payments describe different events and must never be added together.
+**Issued invoice total:** final invoices grouped by issue timestamp and converted to the selected display currency, including tax and after discounts. Drafts are excluded. Invoice totals and payments describe different events and must never be added together.
 
 **New reservations:** records created in the period, including ones subsequently cancelled. The status donut shows the current status of those same records. This is not a count of scheduled arrivals or a historical status snapshot.
 
@@ -37,8 +37,10 @@ Open **Admin → Overview** (`/admin/dashboard`). This replaces the starter cate
 
 ## API and validation
 
-`GET /api/admin/dashboard?days=30&currency=PKR&hotel=<optional-id>` is authenticated and admin-only. Query validation accepts only the supported periods/currencies and a valid hotel ID; unknown hotels return 404. Reads run sequentially inside one MongoDB snapshot transaction, so cards and graphs share a consistent snapshot. Daily aggregates are zero-filled and summed to produce the period cards; money remains integer minor units until presentation, which explicitly uses two decimal places.
+`GET /api/admin/dashboard?days=30&currency=PKR&convert=true&hotel=<optional-id>` is authenticated and admin-only. Query validation accepts only the supported periods/currencies and a valid hotel ID; unknown hotels return 404. Reads run sequentially inside one MongoDB snapshot transaction, so cards and graphs share a consistent snapshot. Daily aggregates are zero-filled and summed to produce the period cards; money remains integer minor units until presentation, which explicitly uses two decimal places.
 
 Backend tests check permissions for every non-admin role, hotel isolation, currency isolation, exact period boundaries, future-record exclusion, draft-invoice exclusion, zero baselines, declining periods, booking statuses, inactive room types and empty inventory. UI tests check currency units, growth labels, filter requests, empty states and exact-value chart tables. Browser checks use the existing demo data at desktop/mobile widths in both themes.
 
 No artificial historical bookings or payments were added to make the graphs look busy. A recently seeded hotel will legitimately show a small number of spikes and no prior-period growth until it accumulates history.
+
+The optional `convert=true` flag enables reporting conversion. Without it the API retains currency-specific filtering. See [ADMIN-GLASS-UI.md](ADMIN-GLASS-UI.md) for rate caching, rounding, outage handling and responsive layout details.

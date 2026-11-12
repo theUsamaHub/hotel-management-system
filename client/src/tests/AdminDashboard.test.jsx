@@ -94,7 +94,7 @@ test('property, period and currency controls request the selected scope', async 
   await userEvent.selectOptions(screen.getByLabelText('Reporting period'), '7');
   await userEvent.selectOptions(screen.getByLabelText('Financial currency'), 'USD');
   await waitFor(() =>
-    expect(requests.at(-1)).toEqual({ hotel: 'hotel-1', days: '7', currency: 'USD' }),
+    expect(requests.at(-1)).toEqual({ hotel: 'hotel-1', days: '7', currency: 'USD', convert: 'true' }),
   );
   await waitFor(() =>
     expect(

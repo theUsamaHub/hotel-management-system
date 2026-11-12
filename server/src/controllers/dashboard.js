@@ -11,6 +11,7 @@ import HousekeepingTask from '../models/HousekeepingTask.js';
 import MaintenanceRequest from '../models/MaintenanceRequest.js';
 import ServiceRequest from '../models/ServiceRequest.js';
 import ApiError from '../utils/ApiError.js';
+import { exchangeRates, convertMinor } from '../services/exchangeRates.js';
 
 const day = 86400000;
 const iso = (value) => new Date(value).toISOString().slice(0, 10);
@@ -20,7 +21,8 @@ export function comparison(current, previous) {
 }
 
 export async function adminDashboard(req, res) {
-  const { hotel, currency, days } = req.query;
+  const { hotel, currency, days, convert } = req.query;
+  const fx = convert ? await exchangeRates() : null;
   const now = new Date();
   const today = iso(now);
   const end = Date.parse(today) + day;
@@ -34,16 +36,22 @@ export async function adminDashboard(req, res) {
     const selectedHotels = hotels.filter((item) => !hotel || String(item._id) === hotel);
     const count = (Model, filter) => Model.countDocuments({ ...scope, ...filter }).session(session);
     async function daily(Model, field, filter = {}, amount) {
-      return Model.aggregate([
+      const rows = await Model.aggregate([
         { $match: { ...scope, ...filter, [field]: { $gte: new Date(previousStart), $lt: now } } },
-        { $group: { _id: { $dateToString: { date: `$${field}`, format: '%Y-%m-%d', timezone: 'UTC' } },
+        { $group: { _id: { date: { $dateToString: { date: `$${field}`, format: '%Y-%m-%d', timezone: 'UTC' } }, currency: amount ? '$currency' : null },
           value: { $sum: amount ? `$${amount}` : 1 } } },
       ]).session(session);
+      const byDate = new Map();
+      for (const row of rows) {
+        const value = amount && fx ? convertMinor(row.value, row._id.currency, currency, fx.rates) : row.value;
+        byDate.set(row._id.date, (byDate.get(row._id.date) || 0) + value);
+      }
+      return [...byDate].map(([date, value]) => ({ _id: date, value: Math.round(value) }));
     }
     const series = {};
     // Transaction operations are intentionally sequential for a consistent snapshot.
-    series.payments = await daily(Payment, 'createdAt', { currency }, 'amount');
-    series.invoices = await daily(Invoice, 'issuedAt', { currency, status: 'issued' }, 'total');
+    series.payments = await daily(Payment, 'createdAt', convert ? {} : { currency }, 'amount');
+    series.invoices = await daily(Invoice, 'issuedAt', { ...(convert ? {} : { currency }), status: 'issued' }, 'total');
     series.bookings = await daily(Reservation, 'createdAt');
     const maps = Object.fromEntries(Object.entries(series).map(([key, rows]) => [key, new Map(rows.map((row) => [row._id, row.value]))]));
     const dailyRows = Array.from({ length: days }, (_, index) => {
@@ -86,6 +94,7 @@ export async function adminDashboard(req, res) {
       .select('reference checkIn checkOut contact.name quote.roomNumber hotel').populate('hotel', 'name')
       .sort({ checkIn: 1, _id: 1 }).limit(6).session(session).lean();
     dashboard = { generatedAt: now.toISOString(), currency, days, hotel: hotel || null, hotels,
+      conversion: fx ? { asOf: fx.asOf, source: 'ExchangeRate-API', basis: 'Latest rates applied to both periods; indicative reporting values, not historical settlement rates.' } : null,
       period: { from: iso(start), to: iso(end), previousFrom: iso(previousStart), previousTo: iso(start) },
       totals, daily: dailyRows, roomStates, bookingStates, queues, upcoming, staff,
       properties: { total: selectedHotels.length, active: selectedHotels.filter((item) => item.isActive).length },

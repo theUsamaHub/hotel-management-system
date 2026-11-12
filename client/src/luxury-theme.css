@@ -1,0 +1,387 @@
+/* Luxury Star: midnight navy, warm ivory and champagne. Shared visual tokens. */
+:root {
+  --surface: #fffdf8;
+  --ink: #172c3a;
+  --line: #cbb99450;
+}
+:root.dark {
+  --surface: #142935;
+  --ink: #f6eedf;
+  --line: #d8bf8b30;
+}
+#root :is(.workspace-glass, .public-shell.guest-glass) {
+  --paper: #eae6dd;
+  --surface: #fffdf8;
+  --wash: #eee9dd;
+  --lift: #e7dfce;
+  --ink: #172c3a;
+  --ink-muted: #354b57;
+  --muted: #5a686c;
+  --line: #baaa8b40;
+  --accent: #826027;
+  --glass: #fffdf8c9;
+  --glass-strong: #fffdf8ed;
+  --glass-edge: #ffffffd6;
+  --glass-shadow: 0 12px 32px #273a4210, inset 0 1px 0 #ffffffa8;
+  --gold: #d9bd84;
+  --gold-ink: #755523;
+  --navy: #112a3a;
+  --navy-soft: #203e4d;
+  --chart-current: #234e62;
+  --chart-previous: #9c855c;
+  --chart-1: #234e62;
+  --chart-2: #a08046;
+  --chart-3: #637d79;
+  --chart-4: #aab6ad;
+  --chart-5: #d9c8a6;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 90% 0%, #e0c69555, transparent 44%),
+    radial-gradient(ellipse at 0 70%, #a9c1bd33, transparent 55%), var(--paper);
+}
+:root.dark #root :is(.workspace-glass, .public-shell.guest-glass) {
+  --paper: #091c28;
+  --surface: #142e3c;
+  --wash: #1b3543;
+  --lift: #264452;
+  --ink: #f6eedf;
+  --ink-muted: #d4dfe0;
+  --muted: #afc0c4;
+  --line: #d8bf8b30;
+  --accent: #e0c48d;
+  --glass: #15303dcc;
+  --glass-strong: #102836ed;
+  --glass-edge: #b4c8cc29;
+  --glass-shadow: 0 12px 32px #0000001f, inset 0 1px 0 #d8bf8b12;
+  --gold-ink: #e0c48d;
+  --chart-current: #e0c48d;
+  --chart-previous: #8eafb5;
+  --chart-1: #e0c48d;
+  --chart-2: #92bec2;
+  --chart-3: #b9aa88;
+  --chart-4: #608d97;
+  --chart-5: #426375;
+  background:
+    radial-gradient(ellipse at 90% 0%, #57604735, transparent 45%),
+    radial-gradient(ellipse at 0 70%, #28516a44, transparent 55%), var(--paper);
+}
+#root :is(.workspace-glass, .guest-glass) .lsh-brand img {
+  filter: none;
+  box-shadow: 0 4px 12px #102b3b18;
+}
+#root :is(.workspace-glass, .guest-glass) .button {
+  background: linear-gradient(135deg, #234657, #112a3a);
+  color: #fffaf0;
+  border-color: #284653;
+  box-shadow:
+    inset 0 1px 0 #ffffff20,
+    0 5px 12px #142b3b12;
+}
+#root :is(.workspace-glass, .guest-glass) .button:hover {
+  background: #2b5264;
+  color: #fffaf0;
+  border-color: #517384;
+}
+#root :is(.workspace-glass, .guest-glass) :is(.button.secondary, .icon-button) {
+  background: var(--glass-strong);
+  color: var(--ink);
+  border-color: var(--line);
+  box-shadow: none;
+}
+#root :is(.workspace-glass, .guest-glass) :is(.button.secondary, .icon-button):hover {
+  background: var(--wash);
+  border-color: var(--gold-ink);
+  color: var(--ink);
+}
+#root :is(.workspace-glass, .guest-glass) :is(input, select, textarea) {
+  background: var(--glass-strong);
+  border-color: var(--line);
+  color: var(--ink);
+}
+#root :is(.workspace-glass, .guest-glass) :is(input, select, textarea):focus {
+  border-color: var(--gold-ink);
+  box-shadow: 0 0 0 3px #c6a56520;
+}
+#root
+  :is(.workspace-glass, .guest-glass)
+  :is(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--gold-ink);
+  outline-offset: 4px;
+}
+#root :is(.workspace-glass, .guest-glass) .eyebrow {
+  color: var(--gold-ink);
+}
+#root :is(.workspace-glass, .guest-glass) .button.danger {
+  color: #9a3040;
+  background: #fff1f2;
+  border-color: #d7a5ac;
+}
+:root.dark #root :is(.workspace-glass, .guest-glass) .button.danger {
+  color: #ffc1ca;
+  background: #432b35;
+  border-color: #895865;
+}
+#root .workspace-glass .workspace-main {
+  background: #fffdf838;
+}
+:root.dark #root .workspace-glass .workspace-main {
+  background: #0b2230aa;
+}
+#root .workspace-glass .sidebar {
+  background: linear-gradient(160deg, #183747f7, #0c2333fa);
+  --ink: #fff5df;
+  --ink-muted: #d6e1e3;
+  --muted: #afc2c8;
+  --line: #d7bc8426;
+  --wash: #274554;
+  --glass-strong: #294957;
+  --glass-edge: #cfba8b35;
+  color: var(--ink);
+  border-color: #e0c48d33;
+}
+#root .workspace-glass .sidebar nav a {
+  color: #d6e1e3;
+}
+#root .workspace-glass .sidebar nav a svg {
+  background: #ffffff0b;
+  color: #d6e1e3;
+}
+#root .workspace-glass .sidebar nav a:hover {
+  background: #335264;
+  color: #fff4df;
+}
+#root .workspace-glass .sidebar nav a.active {
+  background: linear-gradient(125deg, #ead5aa, #c9a76b);
+  color: #142b3b;
+  box-shadow:
+    inset 0 1px 0 #fff7,
+    0 4px 14px #0002;
+}
+#root .workspace-glass .sidebar nav a.active svg {
+  background: #fff9edcf;
+  color: #173343;
+}
+#root .workspace-glass .sidebar .eyebrow {
+  color: #d9bd84;
+}
+#root .workspace-glass .sidebar .brand {
+  color: #fff5df;
+}
+#root .workspace-glass .sidebar .badge {
+  background: #ffffff0a;
+  color: #e4cc9f;
+  border-color: #d9bd8430;
+}
+#root .workspace-glass .sidebar .mobile-menu {
+  background: #284756;
+  color: #fff5df;
+  border-color: #d9bd8450;
+}
+#root .workspace-glass .sidebar .avatar {
+  background: #325464;
+  border-color: #d9bd8435;
+  color: #f3dfb8;
+}
+#root .workspace-glass .sidebar .signout {
+  color: #d6e1e3;
+}
+#root .workspace-glass .sidebar .signout:hover {
+  color: #fff5df;
+  background: #335264;
+}
+#root .workspace-glass .sidebar .workspace-label {
+  color: #d6e1e3;
+}
+#root .workspace-glass .sidebar .account {
+  color: #fff5df;
+}
+#root .workspace-glass .avatar {
+  background: var(--wash);
+  color: var(--gold-ink);
+  border-color: var(--line);
+}
+#root .workspace-glass :is(.analytics-filters, .role-welcome, .guest-account-hero) {
+  background: linear-gradient(120deg, var(--glass-strong), var(--glass));
+  border-color: var(--glass-edge);
+}
+#root .workspace-glass .analytics-metric {
+  border-top: 2px solid #c9aa6b60;
+}
+#root .workspace-glass .metric-label svg {
+  color: var(--gold-ink);
+  background: var(--wash);
+}
+#root .workspace-glass .analytics-metric:nth-child(3) .metric-label svg {
+  color: #f0d8a9;
+  background: #19394a;
+}
+#root .workspace-glass .metric-change.neutral {
+  background: var(--wash);
+  color: var(--muted);
+}
+#root .workspace-glass .badge {
+  background: var(--wash);
+  color: var(--ink-muted);
+  border-color: var(--line);
+}
+#root .workspace-glass .hms-tabs {
+  background: var(--glass);
+  border-color: var(--glass-edge);
+}
+#root .workspace-glass .hms-tabs .button {
+  background: transparent;
+  color: var(--muted);
+  border-color: transparent;
+  box-shadow: none;
+}
+#root .workspace-glass .hms-tabs .button:hover {
+  background: var(--wash);
+  color: var(--ink);
+}
+#root .workspace-glass .hms-tabs .button[aria-current='page'] {
+  background: linear-gradient(125deg, #ead5aa, #c9a76b);
+  color: #142b3b;
+  border-color: #c9aa6b;
+}
+#root .workspace-glass :is(.role-task-icon, .role-welcome-icon) {
+  color: var(--gold-ink);
+  background: var(--wash);
+}
+#root .workspace-glass td {
+  background: var(--glass);
+}
+#root .workspace-glass tbody tr:hover td {
+  background: var(--wash);
+}
+#root
+  .workspace-glass
+  :is(.chart-readout, .desk-grid > div, .hotel-contact, .analytics-definitions) {
+  background: var(--glass);
+}
+#root .workspace-glass .modal {
+  background: var(--surface);
+}
+#root .workspace-glass .modal::backdrop {
+  background: #061d2cb3;
+}
+#root .public-shell.guest-glass .guest-navbar {
+  border-bottom-color: #b99b5f55;
+  box-shadow: 0 8px 28px #263d4810;
+}
+#root .public-shell.guest-glass .destination-hero {
+  background: radial-gradient(ellipse at 10% 0%, #34566670, transparent 65%), #102c3c;
+  color: #fff6e6;
+  border-color: #cdb27b50;
+  box-shadow: 0 22px 50px #102b3c20;
+}
+#root .public-shell.guest-glass .destination-copy h1 {
+  color: #fff6e6;
+  font-weight: 400;
+}
+#root .public-shell.guest-glass .destination-copy h1 em {
+  color: #e2c58d;
+}
+#root .public-shell.guest-glass .destination-copy .eyebrow {
+  color: #e2c58d;
+}
+#root .public-shell.guest-glass .destination-copy > p:not(.eyebrow) {
+  color: #c4d3d7;
+}
+#root .public-shell.guest-glass .destination-copy .button,
+#root .public-shell.guest-glass .guest-cta .button {
+  background: linear-gradient(125deg, #efddb6, #cdaa6e);
+  border-color: #ddc18c;
+  color: #142b3b;
+  box-shadow:
+    inset 0 1px 0 #fff8,
+    0 5px 15px #0002;
+}
+#root .public-shell.guest-glass .destination-copy .button:hover,
+#root .public-shell.guest-glass .guest-cta .button:hover {
+  background: #f1dfb6;
+  color: #142b3b;
+}
+#root .public-shell.guest-glass .hero-bottom {
+  color: #c3d2d6;
+  border-color: #d7bc8430;
+}
+#root .public-shell.guest-glass .hero-bottom a {
+  color: #ead4a8;
+  background: #254451;
+  border-color: #d7bc8455;
+}
+#root .public-shell.guest-glass .guest-home-image {
+  border: 1px solid #e0c69566;
+  box-shadow: 0 16px 40px #0003;
+}
+#root .public-shell.guest-glass :is(.guest-home-image img, .guest-photo img, .discovery-image img) {
+  filter: saturate(0.85);
+}
+#root .public-shell.guest-glass .guest-home-image figcaption {
+  background: #f8f2e6e6;
+  color: #173344;
+  border-color: #fff8;
+}
+#root .public-shell.guest-glass .guest-home-image figcaption span {
+  color: #52636b;
+}
+#root .public-shell.guest-glass .destination-title {
+  color: var(--gold-ink);
+}
+#root .public-shell.guest-glass .guest-feature-grid .card > svg,
+#root .public-shell.guest-glass .journey-number {
+  color: var(--gold-ink);
+  background: var(--wash);
+}
+#root .public-shell.guest-glass .editorial-link {
+  color: var(--gold-ink);
+  border-color: var(--line);
+}
+#root .public-shell.guest-glass .guest-cta {
+  background: radial-gradient(ellipse at 0 0, #395e6b55, transparent 75%), #102c3c;
+  border-color: #cdb27b50;
+  color: #fff6e6;
+  box-shadow: 0 14px 35px #102b3c15;
+}
+#root .public-shell.guest-glass .guest-cta h2 {
+  color: #fff6e6;
+}
+#root .public-shell.guest-glass .guest-cta p {
+  color: #c4d3d7;
+}
+#root .public-shell.guest-glass .guest-cta .eyebrow {
+  color: #e2c58d;
+}
+#root .public-shell.guest-glass .guest-faq details[open] {
+  border-color: #c5a66b80;
+  background: var(--glass-strong);
+}
+#root .public-shell.guest-glass .auth-story {
+  background: linear-gradient(145deg, #213f4d, #102a3a);
+}
+#root .public-shell.guest-glass .auth-story h1 {
+  color: #fff6e6;
+}
+#root .public-shell.guest-glass .auth-story :is(em, .eyebrow) {
+  color: #e2c58d;
+}
+#root .public-shell.guest-glass .auth-story :is(p, small) {
+  color: #c4d3d7;
+}
+#root .theme-toggle {
+  color: var(--ink);
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: 0 6px 22px #102c3c20;
+}
+@media (prefers-reduced-motion: no-preference) {
+  #root :is(.workspace-glass, .guest-glass) :is(.button, .role-task-card, .guest-account-card) {
+    transition:
+      background-color 150ms,
+      border-color 150ms,
+      box-shadow 150ms;
+  }
+  #root .workspace-glass :is(.role-task-card, .guest-account-card):hover {
+    box-shadow: 0 10px 28px #17374814;
+  }
+}

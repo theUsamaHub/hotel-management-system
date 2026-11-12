@@ -1,0 +1,568 @@
+/* Public guest website: the same silver glass language as hotel workspaces. */
+@font-face {
+  font-family: 'Outfit Guest';
+  src: url('/fonts/Outfit-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+.public-shell.guest-glass {
+  --paper: #d4d4d8;
+  --surface: #f9f9fa;
+  --wash: #eaeaec;
+  --ink: #171719;
+  --ink-muted: #39393f;
+  --muted: #5c5c65;
+  --line: #22222d18;
+  --accent: #19191c;
+  --glass: #ffffffad;
+  --glass-strong: #ffffffe0;
+  --glass-edge: #ffffffdb;
+  font-family: 'Outfit Guest', sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 0 0, #ffffffaa, transparent 45%),
+    radial-gradient(ellipse at 100% 55%, #ffffff60, transparent 55%), var(--paper);
+  min-height: 100dvh;
+  padding: 24px;
+  color-scheme: light;
+}
+.public-shell.guest-glass
+  :is(h1, h2, h3, button, input, select, textarea, .lsh-wordmark, .lsh-wordmark small) {
+  font-family: inherit;
+}
+.public-shell.guest-glass :is(h1, h2, h3) {
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.public-shell.guest-glass h1 em {
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 400;
+  color: var(--muted);
+}
+.public-shell.guest-glass .eyebrow {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  font-weight: 500;
+}
+.public-shell.guest-glass
+  :is(.card, .guest-cta, .guest-faq details, .guest-story, .auth-shell, .recovery-notice) {
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+  box-shadow:
+    0 8px 28px #25253006,
+    inset 0 1px 0 #ffffff40;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+.public-shell.guest-glass .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  background: linear-gradient(#333337, #131315);
+  color: #fff;
+  border: 1px solid #27272b;
+  border-radius: 26px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 400;
+  box-shadow:
+    inset 0 1px 0 #ffffff30,
+    0 4px 10px #0000000a;
+}
+.public-shell.guest-glass .button:hover {
+  background: #414147;
+  color: white;
+}
+.public-shell.guest-glass :is(.button.secondary, .icon-button) {
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  box-shadow: none;
+}
+.public-shell.guest-glass .icon-button {
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+}
+.public-shell.guest-glass :is(a, button, summary, input, select, textarea):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+.public-shell.guest-glass :is(input, select, textarea) {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--glass-strong);
+  color: var(--ink);
+  min-height: 46px;
+}
+.public-shell.guest-glass .guest-navbar,
+.public-shell.guest-glass:has(.editorial-home) .guest-navbar {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto 24px;
+  min-height: 86px;
+  height: auto;
+  padding: 20px 28px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+  background: var(--glass-strong);
+  backdrop-filter: blur(28px);
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.public-shell.guest-glass .lsh-wordmark {
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: -0.8px;
+}
+.public-shell.guest-glass .lsh-wordmark small {
+  font-size: 9px;
+  letter-spacing: 3.5px;
+}
+.public-shell.guest-glass .lsh-brand img {
+  filter: grayscale(1);
+  border-radius: 12px;
+}
+.public-shell.guest-glass .guest-navbar nav,
+.public-shell.guest-glass:has(.editorial-home) .guest-navbar nav {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  gap: 18px;
+  font-size: 13px;
+}
+.public-shell.guest-glass .guest-navbar a:not(.button),
+.public-shell.guest-glass:has(.editorial-home) .guest-navbar a:not(.button) {
+  color: var(--ink-muted);
+}
+.public-shell.guest-glass .guest-navbar a.active:not(.button) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 7px;
+}
+.public-shell.guest-glass .editorial-home {
+  max-width: 1440px;
+  margin: auto;
+}
+.public-shell.guest-glass .destination-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+  padding: 40px;
+  height: auto;
+  min-height: 0;
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 32px;
+  color: var(--ink);
+  backdrop-filter: blur(22px);
+}
+.public-shell.guest-glass .destination-copy {
+  max-width: 600px;
+  padding: 12px;
+}
+.public-shell.guest-glass .destination-copy h1 {
+  font-size: clamp(46px, 5.6vw, 82px);
+  line-height: 1.04;
+  margin: 26px 0;
+}
+.public-shell.guest-glass .destination-copy > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 17px;
+}
+.public-shell.guest-glass .destination-copy .eyebrow {
+  color: var(--muted);
+}
+.public-shell.guest-glass .guest-home-image {
+  margin: 0;
+  position: relative;
+  height: 520px;
+  overflow: hidden;
+  border-radius: 26px;
+}
+.public-shell.guest-glass .guest-home-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.4);
+}
+.public-shell.guest-glass .guest-home-image figcaption {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  padding: 20px;
+  background: var(--glass-strong);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-edge);
+  border-radius: 20px;
+  font-size: 19px;
+  color: var(--ink);
+}
+.public-shell.guest-glass .guest-home-image figcaption span {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.public-shell.guest-glass .hero-bottom {
+  grid-column: 1/-1;
+  margin: 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  justify-content: space-between;
+}
+.public-shell.guest-glass .hero-bottom a {
+  border-color: var(--line);
+  color: var(--ink);
+  background: var(--glass-strong);
+}
+.public-shell.guest-glass .destination-title {
+  padding: 42px 20px 8px;
+}
+.public-shell.guest-glass .destination-title > span {
+  font-size: clamp(24px, 3vw, 42px);
+  letter-spacing: 0.22em;
+}
+.public-shell.guest-glass .guest-site {
+  max-width: 1440px;
+  padding: 24px 0 56px;
+  width: 100%;
+}
+.public-shell.guest-glass .editorial-discovery {
+  gap: 24px;
+  padding: 40px 0;
+}
+.public-shell.guest-glass .editorial-discovery > div {
+  padding: 24px;
+}
+.public-shell.guest-glass .editorial-discovery h2 {
+  font-size: clamp(30px, 3.3vw, 48px);
+  line-height: 1.1;
+}
+.public-shell.guest-glass .discovery-image {
+  background: var(--glass);
+  padding: 14px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+}
+.public-shell.guest-glass .discovery-image.secondary {
+  padding-top: 14px;
+  margin-top: 45px;
+}
+.public-shell.guest-glass .discovery-image img {
+  border-radius: 20px;
+  filter: saturate(0.4);
+}
+.public-shell.guest-glass .discovery-image figcaption {
+  padding: 0 10px 12px;
+}
+.public-shell.guest-glass .discovery-image figcaption span {
+  font-family: inherit;
+  font-style: normal;
+  font-size: 21px;
+}
+.public-shell.guest-glass .guest-section {
+  padding: 42px 0;
+}
+.public-shell.guest-glass :is(.guest-section h2, .guest-cta h2) {
+  font-size: clamp(27px, 3vw, 42px);
+  line-height: 1.15;
+}
+.public-shell.guest-glass .journey-grid {
+  gap: 20px;
+}
+.public-shell.guest-glass .journey-grid article {
+  padding: 28px;
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+}
+.public-shell.guest-glass .journey-number {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--glass-strong);
+  color: var(--ink);
+}
+.public-shell.guest-glass .journey-grid h3 {
+  font-size: 26px;
+}
+.public-shell.guest-glass .editorial-link {
+  font-size: 13px;
+  gap: 12px;
+}
+.public-shell.guest-glass .editorial-note {
+  padding: 32px;
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+}
+.public-shell.guest-glass .guest-hero {
+  padding: 36px;
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 32px;
+  gap: 40px;
+}
+.public-shell.guest-glass .guest-hero h1 {
+  font-size: clamp(36px, 4.4vw, 64px);
+  line-height: 1.08;
+}
+.public-shell.guest-glass .guest-photo img {
+  border-radius: 24px;
+  height: 420px;
+  filter: saturate(0.4);
+}
+.public-shell.guest-glass .guest-photo figcaption {
+  color: var(--muted);
+  font-family: inherit;
+}
+.public-shell.guest-glass .guest-feature-grid {
+  gap: 20px;
+}
+.public-shell.guest-glass .guest-feature-grid .card {
+  background: var(--glass);
+  border-color: var(--glass-edge);
+  padding: 28px;
+  border-radius: 28px;
+}
+.public-shell.guest-glass .guest-feature-grid .card > svg {
+  width: 46px;
+  height: 46px;
+  padding: 12px;
+  border-radius: 50%;
+  background: var(--glass-strong);
+  color: var(--ink);
+}
+.public-shell.guest-glass .guest-feature-grid :is(h2, h3) {
+  font-size: 24px;
+}
+.public-shell.guest-glass .guest-cta {
+  padding: 36px;
+  margin-top: 28px;
+}
+.public-shell.guest-glass .guest-footer {
+  max-width: 1440px;
+  width: 100%;
+  padding: 40px;
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+  margin: 0 auto;
+}
+.public-shell.guest-glass .guest-faq details {
+  padding: 24px;
+}
+.public-shell.guest-glass .guest-faq summary {
+  min-height: 28px;
+}
+.public-shell.guest-glass .auth-shell {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto 32px;
+  overflow: hidden;
+}
+.public-shell.guest-glass .auth-panel {
+  background: transparent;
+}
+.public-shell.guest-glass .auth-story {
+  background: var(--glass);
+  border: 0;
+  color: var(--ink);
+}
+.public-shell.guest-glass .auth-story h1 {
+  font-family: inherit;
+  font-size: clamp(40px, 4vw, 64px);
+}
+.public-shell.guest-glass .auth-switch a {
+  color: var(--ink);
+  text-decoration: underline;
+}
+.public-shell.guest-glass :is(.error, .field-error, .error-message) {
+  color: #a62940;
+}
+.public-shell.guest-glass > .loading-skeleton {
+  max-width: 1440px;
+  margin: 32px auto;
+}
+:root.dark .public-shell.guest-glass {
+  --paper: #212126;
+  --surface: #303036;
+  --wash: #38383f;
+  --ink: #f6f6f8;
+  --ink-muted: #d6d6de;
+  --muted: #b1b1be;
+  --line: #ffffff20;
+  --accent: #eeeef3;
+  --glass: #303037b8;
+  --glass-strong: #29292fe8;
+  --glass-edge: #ffffff25;
+  background: radial-gradient(ellipse at 0 0, #44444c, transparent 55%), var(--paper);
+  color-scheme: dark;
+}
+:root.dark .public-shell.guest-glass :is(.error, .field-error, .error-message) {
+  color: #ffb4bd;
+}
+@media (max-width: 1100px) {
+  .public-shell.guest-glass .guest-navbar {
+    flex-wrap: wrap;
+  }
+  .public-shell.guest-glass .guest-nav-toggle {
+    display: inline-grid;
+  }
+  .public-shell.guest-glass .guest-navbar nav,
+  .public-shell.guest-glass:has(.editorial-home) .guest-navbar nav {
+    display: none;
+    width: 100%;
+  }
+  .public-shell.guest-glass .guest-navbar nav.is-open,
+  .public-shell.guest-glass:has(.editorial-home) .guest-navbar nav.is-open {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    background: transparent;
+    padding: 14px 0 0;
+    gap: 8px;
+    box-shadow: none;
+  }
+  .public-shell.guest-glass .guest-navbar nav a {
+    padding: 12px;
+    border-radius: 18px;
+  }
+  .public-shell.guest-glass .destination-hero {
+    padding: 28px;
+    gap: 24px;
+  }
+  .public-shell.guest-glass .guest-home-image {
+    height: 440px;
+  }
+  .public-shell.guest-glass .guest-hero {
+    gap: 24px;
+    padding: 28px;
+  }
+  .public-shell.guest-glass .guest-feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .public-shell.guest-glass {
+    padding: 12px;
+  }
+  .public-shell.guest-glass .guest-navbar,
+  .public-shell.guest-glass:has(.editorial-home) .guest-navbar {
+    padding: 16px;
+    margin-bottom: 14px;
+    min-height: 78px;
+    border-radius: 24px;
+  }
+  .public-shell.guest-glass .lsh-wordmark {
+    font-size: 22px;
+  }
+  .public-shell.guest-glass .lsh-brand img {
+    width: 38px;
+    height: 38px;
+  }
+  .public-shell.guest-glass .destination-hero {
+    grid-template-columns: 1fr;
+    padding: 22px;
+    border-radius: 26px;
+  }
+  .public-shell.guest-glass .destination-copy {
+    padding: 4px;
+  }
+  .public-shell.guest-glass .destination-copy h1 {
+    font-size: clamp(42px, 10vw, 64px);
+  }
+  .public-shell.guest-glass .guest-home-image {
+    height: 340px;
+  }
+  .public-shell.guest-glass .guest-home-image figcaption {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    padding: 16px;
+  }
+  .public-shell.guest-glass .hero-bottom {
+    gap: 16px;
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+  .public-shell.guest-glass .destination-title {
+    padding: 30px 8px 0;
+  }
+  .public-shell.guest-glass .destination-title > span {
+    font-size: 23px;
+    letter-spacing: 0.15em;
+  }
+  .public-shell.guest-glass .guest-site {
+    padding: 12px 0 28px;
+  }
+  .public-shell.guest-glass .editorial-discovery {
+    grid-template-columns: 1fr;
+    padding: 20px 0;
+  }
+  .public-shell.guest-glass .editorial-discovery > div {
+    padding: 16px;
+  }
+  .public-shell.guest-glass .discovery-image.secondary {
+    margin-top: 0;
+  }
+  .public-shell.guest-glass .discovery-image img,
+  .public-shell.guest-glass .discovery-image.secondary img {
+    height: 300px;
+  }
+  .public-shell.guest-glass .guest-hero {
+    padding: 24px;
+    grid-template-columns: 1fr;
+    border-radius: 26px;
+  }
+  .public-shell.guest-glass .guest-hero h1 {
+    font-size: 38px;
+  }
+  .public-shell.guest-glass .guest-photo img {
+    height: 300px;
+  }
+  .public-shell.guest-glass .guest-section {
+    padding: 28px 8px;
+  }
+  .public-shell.guest-glass .guest-feature-grid {
+    grid-template-columns: 1fr;
+  }
+  .public-shell.guest-glass .guest-cta,
+  .public-shell.guest-glass .editorial-note {
+    padding: 26px;
+  }
+  .public-shell.guest-glass .guest-footer {
+    padding: 28px 24px 70px;
+    gap: 28px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .public-shell.guest-glass input {
+    font-size: 16px;
+  }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .public-shell.guest-glass :is(.card, .guest-hero, .destination-hero, .guest-navbar, .guest-cta) {
+    background: var(--surface);
+  }
+}
