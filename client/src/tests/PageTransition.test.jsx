@@ -43,7 +43,7 @@ test('rapid user route changes keep the final page visible without waiting for a
   router.dispose();
 });
 
-test('a slow lazy page shows a visible fallback and can be left and revisited', async () => {
+test('a slow lazy page retains visible content during a transition and can be left and revisited', async () => {
   let finishLoading;
   const Categories = lazy(
     () =>
@@ -67,7 +67,7 @@ test('a slow lazy page shows a visible fallback and can be left and revisited', 
   await act(async () => {
     await router.navigate('/user/categories');
   });
-  expect(screen.getByRole('status')).toBeVisible();
+  expect(screen.getByRole('heading', { name: 'User dashboard' })).toBeVisible();
   await act(async () => {
     await router.navigate('/user/dashboard');
   });

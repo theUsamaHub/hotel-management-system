@@ -22,3 +22,8 @@ Filters use a compact reporting toolbar, with a full-width property selector and
 ExchangeRate-API's open USD feed supplies current reference rates, cached in server memory for up to 24 hours. Both periods use the same snapshot; these are indicative current-rate reporting values, not historical settlement values. Each daily aggregate is rounded to a minor unit after conversion and totals are summed from those displayed daily amounts. Source attribution and rate date appear on the dashboard. No receipt, invoice or payment record is rewritten. Provider failure, invalid rates or rates older than three days return a clear 503 error instead of fabricated zero values. No API key is required.
 
 Verification covers mixed PKR/USD records, conversion in both directions, period and hotel scoping, reconciliation of daily totals, cache reuse, and outage/stale-rate errors. Live browser checks confirmed nonzero PKR-to-USD conversion and matching desktop sidebar/content bottom edges at 1440, 1280 and 768 pixels, plus no horizontal page overflow at 390 and 320 pixels.
+
+
+## Shared role-panel extension
+
+The theme now lives in `client/src/workspace-glass.css` under `.workspace-glass`. AdminLayout and UserLayout both use `WorkspaceLayout`, so management, reception, housekeeping, maintenance and guest accounts share the same shell, typography, input and modal styling, responsive scrolling, and nested page-loading boundary. Public pages remain outside this scope. The earlier admin-only scope description documents the initial implementation.
