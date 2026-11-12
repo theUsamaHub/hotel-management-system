@@ -2,11 +2,16 @@ import GuestLink from '../components/GuestLink.jsx';
 import { Outlet } from 'react-router-dom';
 import Brand from '../components/Brand.jsx';
 import Navbar from '../components/Navbar.jsx';
+import { Suspense } from 'react';
+import Loader from '../components/Loader.jsx';
+import '../guest-glass.css';
 export default function PublicLayout() {
   return (
-    <div className="public-shell">
+    <div className="public-shell guest-glass">
       <Navbar />
-      <Outlet />
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
       <footer className="guest-footer">
         <div>
           <GuestLink className="brand" to="/">
